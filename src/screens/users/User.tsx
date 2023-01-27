@@ -1,4 +1,4 @@
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useOutletContext, useParams } from "react-router-dom";
 import { users } from "../../db";
 
 /*
@@ -10,6 +10,7 @@ import { users } from "../../db";
   파라미터는 객체로 반환되기 때문에, 객체 내부의 변수명을 사용하여 해당 파라미터를 사용할 수 있다.
  */
 const User = () => {
+  console.log("User component", useOutletContext());
   const { userId } = useParams();
   return (
     <div>
@@ -18,7 +19,11 @@ const User = () => {
       </h1>
       <hr />
       <Link to={"followers"}>See follwers</Link>
-      <Outlet />
+      <Outlet
+        context={{
+          userName: users[Number(userId) - 1].name
+        }}
+      />
     </div>
   );
 };
