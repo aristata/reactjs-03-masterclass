@@ -1,5 +1,6 @@
+import React from "react";
 import { Link } from "react-router-dom";
-import { users } from "../db";
+import { users } from "./../db";
 
 const Home = () => {
   return (
