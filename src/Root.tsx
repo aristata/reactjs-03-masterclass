@@ -9,13 +9,13 @@ import Header from "./components/Header";
   하위 경로 요소인 <About></About> 컴포넌트가 <Outlet></Outlet> 컴포넌트 위치에 렌더링 된다.
 
 */
-function Root() {
+const Root = () => {
   return (
     <div>
       <Header />
       <Outlet />
     </div>
   );
-}
+};
 
 export default Root;
