@@ -10,7 +10,8 @@ import About from "./screens/About";
 import Root from "./Root";
 import NotFound from "./screens/NotFound";
 import ErrorComponent from "./components/ErrorComponent";
-import User from "./screens/User";
+import User from "./screens/users/User";
+import Followers from "./screens/users/Followers";
 
 /* 
   React Router v6 이전
@@ -49,7 +50,13 @@ const Router = createBrowserRouter([
       },
       {
         path: "users/:userId",
-        element: <User />
+        element: <User />,
+        children: [
+          {
+            path: "followers",
+            element: <Followers />
+          }
+        ]
       }
     ],
     errorElement: <NotFound />
