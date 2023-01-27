@@ -49,7 +49,7 @@ const MenuBar = styled.div`
 
 /*
   useNavigate
-  
+
   페이지를 이동시킬때 Link 를 사용한다
   하지만 Link 는 사용자가 클릭을 해야만 동작을 한다
   로그인이 되면 다른페이지로 리다이렉트 시키는 동작을 만들려면 어떻게 해야 할까?
@@ -59,7 +59,7 @@ const MenuBar = styled.div`
 const Header = () => {
   const navigate = useNavigate();
   const onAboutClick = () => {
-    navigate("/about");
+    navigate(`/about?now=${Date.now()}`);
   };
   return (
     <MenuBar>
