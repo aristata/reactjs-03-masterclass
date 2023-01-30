@@ -2,8 +2,8 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import Router from "./config/Router";
-import { theme } from "./config/themes";
+import Router from "./routers/Router";
+import { theme } from "./styles/themes";
 
 const container = document.getElementById("root");
 
