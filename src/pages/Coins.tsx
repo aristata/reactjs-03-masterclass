@@ -26,13 +26,20 @@ const Coin = styled.li`
     font-size: 24px;
     padding: 20px;
     transition: color 0.2s ease-in;
-    display: block;
+    display: flex;
+    align-items: center;
   }
   &:hover {
     a {
       color: ${(props) => props.theme.accentColor};
     }
   }
+`;
+
+const CoinImage = styled.img`
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
 `;
 
 const Title = styled.h1`
@@ -128,7 +135,12 @@ const Coins = () => {
         <CoinList>
           {response.coins.map((coin) => (
             <Coin key={coin.id}>
-              <Link to={`/${coin.symbol}`}>{coin.name} →</Link>
+              <Link to={`/${coin.symbol}`} state={{ coinName: coin.name }}>
+                <CoinImage
+                  src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                />
+                {coin.name} →
+              </Link>
             </Coin>
           ))}
         </CoinList>
