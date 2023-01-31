@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Params, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -36,12 +36,28 @@ interface IRouterLocation {
 }
 
 const Coin = () => {
-  const [loading, setLoading] = useState(true);
   const { coinId } = useParams() as IRouterParams;
   const { state } = useLocation() as IRouterLocation;
 
+  const [loading, setLoading] = useState(true);
+  const [infoData, setInfoData] = useState({});
+  const [priceData, setPriceData] = useState({});
+
   console.log("coinId", coinId);
   console.log("state", state);
+
+  useEffect(() => {
+    (async () => {
+      const infoData = await (
+        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+      ).json();
+      const priceData = await (
+        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+      ).json();
+      setInfoData(infoData);
+      setPriceData(priceData);
+    })();
+  }, [coinId]);
 
   return (
     <Container>
