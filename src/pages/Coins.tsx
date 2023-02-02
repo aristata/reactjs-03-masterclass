@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { useEffect, useState } from "react";
+import { ICoinResponse } from "../apis/coins/types";
+import { getCoins } from "../apis/coins";
+import { useQuery } from "@tanstack/react-query";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -90,50 +92,21 @@ const Loader = styled.span`
   animation: ${blinkEffect} 1s infinite;
 `;
 
-interface ICoinResponse {
-  coins: ICoin[];
-  totalCount: number;
-}
-
-interface ICoin {
-  id: string;
-  name: string;
-  symbol: string;
-  rank: number;
-  is_new: boolean;
-  is_active: boolean;
-  type: string;
-}
-
 const Coins = () => {
-  const [response, setResponse] = useState<ICoinResponse>({
-    coins: [],
-    totalCount: 0
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("https://api.coinpaprika.com/v1/coins");
-      const json = await response.json();
-      setResponse({
-        coins: json.slice(0, 20),
-        totalCount: Array.from(json).length
-      });
-      setLoading(false);
-    })();
-  }, []);
+  const { isLoading, data } = useQuery<ICoinResponse>(["/coins"], () =>
+    getCoins()
+  );
 
   return (
     <Container>
       <Header>
-        <Title>코인 리스트: {response.totalCount}</Title>
+        <Title>코인 리스트: {data?.totalCount}</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <CoinList>
-          {response.coins.map((coin) => (
+          {data?.coins?.map((coin) => (
             <Coin key={coin.id}>
               <Link to={`/${coin.id}`} state={{ coinName: coin.name }}>
                 <CoinImage
