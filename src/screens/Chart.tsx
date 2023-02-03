@@ -60,7 +60,15 @@ const Chart = () => {
                 data?.map((chartData) => {
                   return chartData.timestamp.split("T").at(0);
                 }) ?? []
-            }
+            },
+            fill: {
+              type: "gradient",
+              gradient: {
+                gradientToColors: ["#0be881"],
+                stops: [0, 100]
+              }
+            },
+            colors: ["#0fbcf9"]
           }}
         />
       )}
