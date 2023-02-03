@@ -1,3 +1,4 @@
+import { getToday, translateDateFormat } from "../../libs/custom-date";
 import instance from "../axios-instance";
 import { ICoin, ICoinInfo, ICoinPrice } from "./types";
 
@@ -27,6 +28,21 @@ export const getCoinInfo = async (coinId: string) => {
 export const getCoinPrice = async (coinId: string) => {
   const { data } = await instance.get<ICoinPrice>(
     `https://api.coinpaprika.com/v1/tickers/${coinId}`
+  );
+
+  return data;
+};
+
+export const getCoinPriceHistory = async (
+  coinId: string,
+  todayDateNumber: number
+) => {
+  const startDateNumber = todayDateNumber - 1000 * 60 * 60 * 24 * 7 * 2;
+  const endDate = translateDateFormat(todayDateNumber);
+  const startDate = translateDateFormat(startDateNumber);
+
+  const { data } = await instance.get(
+    `https://api.coinpaprika.com/v1/tickers/${coinId}/historical?start=${startDate}&end=${endDate}&interval=1d`
   );
 
   return data;
