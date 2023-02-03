@@ -67,3 +67,10 @@ export interface ICoinPrice {
     };
   };
 }
+
+export interface ICoinChart {
+  timestamp: string;
+  price: number;
+  volume_24h: number;
+  market_cap: number;
+}
