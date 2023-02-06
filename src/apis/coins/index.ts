@@ -1,4 +1,4 @@
-import { translateDateFormat } from "../../libs/custom-date";
+import { translateDateFormat } from "../../libs/dateTranslator";
 import instance from "../axios-instance";
 import { Coin, CoinChart, CoinInfo, CoinPrice } from "./types";
 

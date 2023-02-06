@@ -1,7 +1,7 @@
 import { useOutletContext } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCoinPriceHistory } from "../apis/coins";
-import { getToday } from "../libs/custom-date";
+import { getToday } from "../libs/dateTranslator";
 import { CoinChart } from "../apis/coins/types";
 import ReactApexChart from "react-apexcharts";
 
