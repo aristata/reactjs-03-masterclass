@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { CoinResponse } from "../apis/coins/types";
 import { getCoins } from "../apis/coins";
@@ -14,8 +14,16 @@ const Container = styled.div`
 const Header = styled.header`
   height: 15vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  column-gap: 8px;
+  button {
+    border: 1px solid ${(props) => props.theme.bgColor};
+    border-radius: 20px;
+    padding: 8px 16px;
+    background-color: ${(props) => props.theme.cardBgColor};
+    color: ${(props) => props.theme.textColor};
+  }
 `;
 
 const CoinList = styled.ul``;
@@ -93,7 +101,13 @@ const Loader = styled.span`
   animation: ${blinkEffect} 1s infinite;
 `;
 
+interface OutletContext {
+  isDark: boolean;
+  toggleTheme: () => void;
+}
+
 const Coins = () => {
+  const { isDark, toggleTheme } = useOutletContext<OutletContext>();
   const { isLoading, data } = useQuery<CoinResponse>(["/coins"], () =>
     getCoins()
   );
@@ -105,6 +119,9 @@ const Coins = () => {
       </Helmet>
       <Header>
         <Title>코인 리스트: {data?.totalCount}</Title>
+        <button onClick={toggleTheme}>
+          {isDark ? "라이트 모드로" : "다크 모드로"}
+        </button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

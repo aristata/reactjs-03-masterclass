@@ -17,9 +17,8 @@ const App = () => {
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <button onClick={toggleTheme}>Toggle Theme</button>
         <GlobalStyle />
-        <Outlet />
+        <Outlet context={{ isDark, toggleTheme }} />
         <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>
     </>
