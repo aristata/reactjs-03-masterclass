@@ -24,9 +24,10 @@ const Item = styled.div`
 const Label = styled.span`
   font-size: 24px;
   font-weight: 700;
-  border: 1px solid white;
+  border: 1px solid ${(props) => props.theme.textColor};
   border-radius: 30px;
   padding: 8px 16px;
+  color: ${(props) => props.theme.textColor};
 `;
 
 const Text = styled.span`
