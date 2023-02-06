@@ -4,13 +4,15 @@ import { getCoinPriceHistory } from "../apis/coins";
 import { getToday } from "../libs/dateTranslator";
 import { CoinChart } from "../apis/coins/types";
 import ReactApexChart from "react-apexcharts";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms/DarkModeAtom";
 
 interface IOutletContext {
   coinId: string;
-  isDark: boolean;
 }
 const Chart = () => {
-  const { coinId, isDark } = useOutletContext<IOutletContext>();
+  const { coinId } = useOutletContext<IOutletContext>();
+  const isDark = useRecoilValue(isDarkAtom);
 
   const today = getToday();
   const now = Date.now();

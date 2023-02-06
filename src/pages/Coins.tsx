@@ -1,9 +1,11 @@
-import { Link, useOutletContext } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { CoinResponse } from "../apis/coins/types";
 import { getCoins } from "../apis/coins";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
+import { useRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms/DarkModeAtom";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -101,13 +103,27 @@ const Loader = styled.span`
   animation: ${blinkEffect} 1s infinite;
 `;
 
-interface OutletContext {
-  isDark: boolean;
-  toggleTheme: () => void;
-}
+/* 
+  recoil 을 사용하면 아래 인터페이스도 필요가 없다
+  interface OutletContext {
+    isDark: boolean;
+    toggleTheme: () => void;
+  } 
+*/
 
 const Coins = () => {
-  const { isDark, toggleTheme } = useOutletContext<OutletContext>();
+  /* 
+    recoil 을 사용하면 OutletContext 를 사용하여 상태를 넘겨 줄 필요가 없다 
+    const { isDark, toggleTheme } = useOutletContext<OutletContext>(); 
+
+    값을 불러 올땐, useRecoilValue 훅을 사용한다
+    값을 세팅 할땐, useSetRecoilState 훅을 사용한다
+    불러오는 것과 세팅 하는 것 둘다 사용할땐, useRecoilState 훅을 사용한다
+  */
+  const [isDark, setIsDark] = useRecoilState(isDarkAtom);
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+  };
   const { isLoading, data } = useQuery<CoinResponse>(["/coins"], () =>
     getCoins()
   );
