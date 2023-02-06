@@ -7,9 +7,10 @@ import ReactApexChart from "react-apexcharts";
 
 interface IOutletContext {
   coinId: string;
+  isDark: boolean;
 }
 const Chart = () => {
-  const { coinId } = useOutletContext<IOutletContext>();
+  const { coinId, isDark } = useOutletContext<IOutletContext>();
 
   const today = getToday();
   const now = Date.now();
@@ -34,7 +35,7 @@ const Chart = () => {
           ]}
           options={{
             theme: {
-              mode: "dark"
+              mode: isDark ? "dark" : "light"
             },
             chart: {
               height: 300,
