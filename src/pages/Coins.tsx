@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { ICoinResponse } from "../apis/coins/types";
+import { CoinResponse } from "../apis/coins/types";
 import { getCoins } from "../apis/coins";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -93,12 +94,15 @@ const Loader = styled.span`
 `;
 
 const Coins = () => {
-  const { isLoading, data } = useQuery<ICoinResponse>(["/coins"], () =>
+  const { isLoading, data } = useQuery<CoinResponse>(["/coins"], () =>
     getCoins()
   );
 
   return (
     <Container>
+      <Helmet>
+        <title>코인 리스트</title>
+      </Helmet>
       <Header>
         <Title>코인 리스트: {data?.totalCount}</Title>
       </Header>

@@ -2,7 +2,7 @@ import { useOutletContext } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCoinPriceHistory } from "../apis/coins";
 import { getToday } from "../libs/custom-date";
-import { ICoinChart } from "../apis/coins/types";
+import { CoinChart } from "../apis/coins/types";
 import ReactApexChart from "react-apexcharts";
 
 interface IOutletContext {
@@ -14,8 +14,8 @@ const Chart = () => {
   const today = getToday();
   const now = Date.now();
 
-  const { isLoading, data } = useQuery<ICoinChart[]>(
-    ["coinPriceChart", coinId, today],
+  const { isLoading, data } = useQuery<CoinChart[]>(
+    ["coinChart", coinId, today],
     () => getCoinPriceHistory(coinId, now)
   );
 

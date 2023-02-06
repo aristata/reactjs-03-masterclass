@@ -8,8 +8,9 @@ import {
 } from "react-router-dom";
 import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
-import { ICoinInfo, ICoinPrice } from "../apis/coins/types";
+import { CoinInfo, CoinPrice } from "../apis/coins/types";
 import { getCoinInfo, getCoinPrice } from "../apis/coins";
+import { Helmet } from "react-helmet";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -103,11 +104,11 @@ const Coin = () => {
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
 
-  const { isLoading: infoLoading, data: infoData } = useQuery<ICoinInfo>(
+  const { isLoading: infoLoading, data: infoData } = useQuery<CoinInfo>(
     ["coinInfo", coinId],
     () => getCoinInfo(coinId)
   );
-  const { isLoading: priceLoading, data: priceData } = useQuery<ICoinPrice>(
+  const { isLoading: priceLoading, data: priceData } = useQuery<CoinPrice>(
     ["coinPrice", coinId],
     () => getCoinPrice(coinId)
   );
@@ -115,6 +116,15 @@ const Coin = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.coinName
+            ? state.coinName
+            : loading
+            ? "Loading..."
+            : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         <Link to={`/coins`}>
           <svg
@@ -177,7 +187,7 @@ const Coin = () => {
               <Link to={`/${coinId}/price`}>Price</Link>
             </Tab>
           </Tabs>
-          <Outlet context={{ coinId }} />
+          <Outlet context={{ coinId, priceData }} />
         </>
       )}
     </Container>

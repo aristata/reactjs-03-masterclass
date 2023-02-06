@@ -1,4 +1,4 @@
-export interface ICoin {
+export interface Coin {
   id: string;
   name: string;
   symbol: string;
@@ -8,12 +8,12 @@ export interface ICoin {
   type: string;
 }
 
-export interface ICoinResponse {
-  coins: ICoin[];
+export interface CoinResponse {
+  coins: Coin[];
   totalCount: number;
 }
 
-export interface ICoinInfo {
+export interface CoinInfo {
   id: string;
   name: string;
   symbol: string;
@@ -34,7 +34,7 @@ export interface ICoinInfo {
   last_data_at: string;
 }
 
-export interface ICoinPrice {
+export interface CoinPrice {
   id: string;
   name: string;
   symbol: string;
@@ -68,7 +68,7 @@ export interface ICoinPrice {
   };
 }
 
-export interface ICoinChart {
+export interface CoinChart {
   timestamp: string;
   price: number;
   volume_24h: number;

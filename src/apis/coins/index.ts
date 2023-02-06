@@ -1,9 +1,9 @@
 import { translateDateFormat } from "../../libs/custom-date";
 import instance from "../axios-instance";
-import { ICoin, ICoinChart, ICoinInfo, ICoinPrice } from "./types";
+import { Coin, CoinChart, CoinInfo, CoinPrice } from "./types";
 
 export const getCoins = async () => {
-  const { data } = await instance.get<ICoin[]>(
+  const { data } = await instance.get<Coin[]>(
     "https://api.coinpaprika.com/v1/coins"
   );
 
@@ -18,7 +18,7 @@ export const getCoins = async () => {
 };
 
 export const getCoinInfo = async (coinId: string) => {
-  const { data } = await instance.get<ICoinInfo>(
+  const { data } = await instance.get<CoinInfo>(
     `https://api.coinpaprika.com/v1/coins/${coinId}`
   );
 
@@ -26,7 +26,7 @@ export const getCoinInfo = async (coinId: string) => {
 };
 
 export const getCoinPrice = async (coinId: string) => {
-  const { data } = await instance.get<ICoinPrice>(
+  const { data } = await instance.get<CoinPrice>(
     `https://api.coinpaprika.com/v1/tickers/${coinId}`
   );
 
@@ -41,7 +41,7 @@ export const getCoinPriceHistory = async (
   const endDate = translateDateFormat(todayDateNumber);
   const startDate = translateDateFormat(startDateNumber);
 
-  const { data } = await instance.get<ICoinChart[]>(
+  const { data } = await instance.get<CoinChart[]>(
     `https://api.coinpaprika.com/v1/tickers/${coinId}/historical?start=${startDate}&end=${endDate}&interval=1d`
   );
 
