@@ -22,6 +22,7 @@ export const GlobalStyle = createGlobalStyle`
 
   * {
     font-family: 'Cafe24Ssurround';
+    font-size: 16pt;
   }
 
 `;
