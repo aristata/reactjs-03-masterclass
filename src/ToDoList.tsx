@@ -1,22 +1,40 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-const ToDoList = () => {
-  // handleSubmit(성공, 실패)
-  // 첫번째 인자로 성공시 실행할 함수를 받는다
-  // 두번째 인자는 실패시 실행할 함수인데, 선택사항이다
-  // 폼이 제출(submit) 되었을 때, 모든 밸리데이션이 통과되었다면, 성공 함수를 실행한다
-  // 밸리데이션이 하나라도 통과되지 못했다면, 실패 함수가 실행된다
+interface Form {
+  email: string;
+  firstName?: string;
+  lastName: string;
+  userName: string;
+  password: string;
+  passwordConfirm: string;
+  extraErrors?: string;
+}
 
-  // formState
-  // 현재 폼의 상태를 확인할 수 있다
-  const { register, handleSubmit, formState } = useForm();
-  const onValid = (formData: any) => {
+const ToDoList = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError
+  } = useForm<Form>({
+    defaultValues: {
+      email: "@gmail.com"
+    }
+  });
+  const onValid = (formData: Form) => {
+    if (formData.password !== formData.passwordConfirm) {
+      setError(
+        "passwordConfirm",
+        { message: "패스워드가 일치하지 않습니다." },
+        { shouldFocus: true }
+      );
+    }
+
+    // setError("extraErrors", { message: "server offline" });
+
     console.log(formData);
   };
-  console.log(formState.errors);
 
-  // validation 은 register 의 두번째 인자로 넣을 수 있다
   return (
     <div>
       <form
@@ -24,35 +42,73 @@ const ToDoList = () => {
         onSubmit={handleSubmit(onValid)}
       >
         <input
-          {...register("email", { required: true, minLength: 5 })}
-          placeholder={"email 을 입력하세요"}
+          {...register("email", {
+            required: "email 을 입력해 주세요.",
+            pattern: {
+              value: /\b[\w.-]+@[\w.-]+\.\w{2,4}\b/,
+              message: "이메일 형식에 맞게 입력해 주세요. 예) abc@gmail.com"
+            }
+          })}
+          placeholder={"abc@gmail.com"}
         />
+        <span>{errors?.email?.message}</span>
         <input
           {...register("firstName")}
           placeholder={"firstName 을 입력하세요"}
         />
         <input
-          {...register("lastName")}
+          {...register("lastName", {
+            required: "lastName 은 필수값 입니다.",
+            validate: {
+              noSlang: (value) =>
+                value.includes("개") ? "비속어를 사용하실 수 없습니다" : true,
+              noCat: (value) =>
+                value.includes("고양이")
+                  ? "고양이 대신 고영희를 사용하세요"
+                  : true
+            }
+          })}
           placeholder={"lastName 을 입력하세요"}
         />
+        <span>{errors?.lastName?.message}</span>
         <input
-          {...register("userName")}
+          {...register("userName", {
+            required: "userName 을 입력해 주세요.",
+            minLength: {
+              value: 3,
+              message: "userName 은 최소 3글자이상 입력해야 합니다."
+            },
+            maxLength: {
+              value: 15,
+              message: "userName 은 최대 15글자이하 입력해야 합니다."
+            }
+          })}
           placeholder={"userName 을 입력하세요"}
         />
+        <span>{errors?.userName?.message}</span>
         <input
           {...register("password", {
             required: "비밀번호는 필수값 입니다",
             minLength: {
               value: 8,
               message: "비밀번호는 최소 8자 이상이어야 합니다"
+            },
+            pattern: {
+              value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+              message:
+                "비밀번호는 숫자, 소문자, 대문자 를 포함한 8자리 이상이어야 합니다"
             }
           })}
           placeholder={"password 을 입력하세요"}
         />
+        <span>{errors?.password?.message}</span>
         <input
-          {...register("passwordConfirm", { required: true, minLength: 5 })}
+          {...register("passwordConfirm", {
+            required: "비밀번호 확인은 필수값 입니다"
+          })}
           placeholder={"passwordConfirm 을 입력하세요"}
         />
+        <span>{errors?.passwordConfirm?.message}</span>
         <button>추가하기</button>
       </form>
     </div>
