@@ -5,7 +5,7 @@ import ToDo from "../components/ToDo";
 
 const ToDoList = () => {
   const toDos = useRecoilValue(toDoState);
-
+  console.log("ToDos", toDos);
   return (
     <div>
       <h1>To Dos</h1>
