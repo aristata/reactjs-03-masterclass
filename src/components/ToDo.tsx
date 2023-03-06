@@ -1,5 +1,19 @@
 import { useSetRecoilState } from "recoil";
-import { ToDoData, toDoState } from "../atoms/todos";
+import styled from "styled-components";
+import { Categories, ToDoData, toDoState } from "../atoms/todos";
+
+const Box = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 8px;
+`;
+
+const ToDoSpan = styled.span``;
+
+const CategoryButton = styled.button`
+  margin-left: 4px;
+`;
 
 const ToDo = ({ text, category, id }: ToDoData) => {
   const setToDos = useSetRecoilState(toDoState);
@@ -11,7 +25,7 @@ const ToDo = ({ text, category, id }: ToDoData) => {
       const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
       const newToDo = {
         id,
-        category: name as "TO_DO" | "DOING" | "DONE",
+        category: name as Categories,
         text
       };
       return [
@@ -23,22 +37,26 @@ const ToDo = ({ text, category, id }: ToDoData) => {
   };
   return (
     <li>
-      <span>{text}</span>
-      {category !== "DOING" && (
-        <button name="DOING" onClick={changeCategory}>
-          Doing
-        </button>
-      )}
-      {category !== "TO_DO" && (
-        <button name="TO_DO" onClick={changeCategory}>
-          To Do
-        </button>
-      )}
-      {category !== "DONE" && (
-        <button name="DONE" onClick={changeCategory}>
-          Done
-        </button>
-      )}
+      <Box>
+        <ToDoSpan>{text}</ToDoSpan>
+        <div>
+          {category !== Categories.DOING && (
+            <CategoryButton name={Categories.DOING} onClick={changeCategory}>
+              Doing
+            </CategoryButton>
+          )}
+          {category !== Categories.TO_DO && (
+            <CategoryButton name={Categories.TO_DO} onClick={changeCategory}>
+              To Do
+            </CategoryButton>
+          )}
+          {category !== Categories.DONE && (
+            <CategoryButton name={Categories.DONE} onClick={changeCategory}>
+              Done
+            </CategoryButton>
+          )}
+        </div>
+      </Box>
     </li>
   );
 };
