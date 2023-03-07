@@ -16,5 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts"]
+  "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": [".idea", "node_modules", "지난 강의들"]
 }
