@@ -1,7 +1,9 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useEffect } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { Categories, toDoCategoryState, toDoSelector } from "../atoms/todos";
+import { ToDoData, toDoSelector, toDoState } from "../atoms/todos";
 import CreateToDo from "../components/CreateToDo";
+import SelectCategory from "../components/SelectCategory";
 import ToDo from "../components/ToDo";
 
 /**
@@ -17,36 +19,48 @@ const Container = styled.div`
   display: grid;
   grid-template-rows: 60px 1fr 60px;
   margin: auto;
+  margin-top: 16px;
 `;
 
-const TitleArea = styled.h1`
-  p {
-    font-size: 16pt;
-    text-align: center;
-    margin-top: 16px;
-  }
+const TitleArea = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   border-bottom: 1px solid #40513b;
 `;
 
-const ContentArea = styled.div``;
+const ContentArea = styled.div`
+  padding: 8px;
+`;
+
+const EmptyContentArea = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const InputArea = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  border-top: 1px solid #40513b;
 `;
 
 const ToDoList = () => {
   const toDos = useRecoilValue(toDoSelector);
-  const [category, setCategory] = useRecoilState(toDoCategoryState);
-  const onChangeHandler = (event: React.FormEvent<HTMLSelectElement>) => {
-    setCategory(event.currentTarget.value as Categories);
-  };
+  const setToDos = useSetRecoilState(toDoState);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("ToDoList");
+    if (savedData !== null) {
+      const savedToDoList = JSON.parse(savedData) as ToDoData[];
+      setToDos(savedToDoList);
+    }
+  }, [setToDos]);
+
   return (
     <Container>
       <TitleArea>
-        <p>할 일 목록</p>
+        <SelectCategory />
       </TitleArea>
       <ContentArea>
         {toDos.length > 0 ? (
@@ -56,21 +70,12 @@ const ToDoList = () => {
             ))}
           </ul>
         ) : (
-          <>
+          <EmptyContentArea>
             <p>없습니다</p>
-          </>
+          </EmptyContentArea>
         )}
       </ContentArea>
       <InputArea>
-        <select
-          value={category}
-          onChange={onChangeHandler}
-          style={{ width: "200px", height: "60px" }}
-        >
-          <option value={Categories.TO_DO}>해야할 일</option>
-          <option value={Categories.DOING}>하는중인 일</option>
-          <option value={Categories.DONE}>다한 일</option>
-        </select>
         <CreateToDo />
       </InputArea>
     </Container>
