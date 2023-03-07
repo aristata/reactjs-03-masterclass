@@ -8,11 +8,9 @@ import { RecoilRoot } from "recoil";
 const container = document.getElementById("root");
 const root = createRoot(container!); // exclamation mark (!) is known as the non-null assertion operator in Typescript
 root.render(
-  <React.StrictMode>
-    <RecoilRoot>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </RecoilRoot>
-  </React.StrictMode>
+  <RecoilRoot>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </RecoilRoot>
 );
