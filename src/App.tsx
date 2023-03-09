@@ -7,7 +7,7 @@ import Board from "./components/Board";
 
 const Wrapper = styled.div`
   max-width: 680px;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   margin: 0 auto;
   display: flex;
@@ -25,14 +25,24 @@ const Boards = styled.div`
 
 const App = () => {
   const [toDos, setToDos] = useRecoilState(toDoState);
-  const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
-    if (!destination) return;
-    // setToDos((oldToDos) => {
-    //   const toDosCopy = [...oldToDos];
-    //   toDosCopy.splice(source.index, 1);
-    //   toDosCopy.splice(destination.index, 0, draggableId);
-    //   return toDosCopy;
-    // });
+  const onDragEnd = (info: DropResult) => {
+    console.log(info);
+    const { draggableId, destination, source } = info;
+    if (destination?.droppableId === source.droppableId) {
+      // 같은 보드 내의 이동
+      setToDos((allBoards) => {
+        // 1. 소스보드의 배열을 복사한다
+        const boardCopy = [...allBoards[source.droppableId]];
+        // 2. 복사한 배열의 순서를 바꾼다
+        boardCopy.splice(source.index, 1);
+        boardCopy.splice(destination.index, 0, draggableId);
+        // 3. 바꾼 배열과 나머지 보드들을 합쳐서 내보낸다
+        return {
+          ...allBoards, // 나머지 보드들은 그대로 복사한다
+          [source.droppableId]: boardCopy // 소스 보드에는 바뀐 배열을 복사한다
+        };
+      });
+    }
   };
   return (
     <>
