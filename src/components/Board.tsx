@@ -6,11 +6,11 @@ const BoardArea = styled.div`
   background-color: ${(props) => props.theme.boardBackgroundColor};
   min-height: 300px;
   width: 250px;
-  padding: 20px 10px;
   padding-top: 10px;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const Title = styled.h2`
@@ -28,12 +28,13 @@ interface DropAreaProps {
 const DropArea = styled.div<DropAreaProps>`
   background-color: ${(props) =>
     props.isDraggingOver
-      ? "#E5D1FA"
+      ? "#dfe6e9"
       : props.isDraggingFromThis
-      ? "#FFE5F1"
-      : "#C0DEFF"};
+      ? "#b2bec3"
+      : "transparent"};
   flex-grow: 1;
   transition: background-color 0.3s ease-in-out;
+  padding: 20px;
 `;
 
 interface BoardProps {

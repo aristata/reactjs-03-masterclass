@@ -7,18 +7,26 @@ interface DraggableCardProps {
   index: number;
 }
 
-const CardArea = styled.div`
-  background-color: ${(props) => props.theme.cardBackgroundColor};
-  padding: 10px 10px;
+interface CardAreaProps {
+  isDragging: boolean;
+}
+
+const CardArea = styled.div<CardAreaProps>`
+  background-color: ${(props) =>
+    props.isDragging ? "#e4f2ff" : props.theme.cardBackgroundColor};
+  padding: 10px;
   margin-bottom: 5px;
   border-radius: 5px;
+  box-shadow: ${(props) =>
+    props.isDragging ? "0px 4px 8px rgba(0, 0, 0, 0.05)" : "none"};
 `;
 
 const Card = ({ todo, index }: DraggableCardProps) => {
   return (
     <Draggable draggableId={todo} index={index}>
-      {(magic) => (
+      {(magic, snapshot) => (
         <CardArea
+          isDragging={snapshot.isDragging}
           ref={magic.innerRef}
           {...magic.draggableProps}
           {...magic.dragHandleProps}
