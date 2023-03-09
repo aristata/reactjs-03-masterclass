@@ -28,8 +28,9 @@ const App = () => {
   const onDragEnd = (info: DropResult) => {
     console.log(info);
     const { draggableId, destination, source } = info;
-    if (destination?.droppableId === source.droppableId) {
-      // 같은 보드 내의 이동
+    if (!destination) return;
+    if (destination.droppableId === source.droppableId) {
+      // 같은 보드내의 이동
       setToDos((allBoards) => {
         // 1. 소스보드의 배열을 복사한다
         const boardCopy = [...allBoards[source.droppableId]];
@@ -40,6 +41,20 @@ const App = () => {
         return {
           ...allBoards, // 나머지 보드들은 그대로 복사한다
           [source.droppableId]: boardCopy // 소스 보드에는 바뀐 배열을 복사한다
+        };
+      });
+    }
+    if (destination.droppableId !== source.droppableId) {
+      // 다른 보드로의 이동
+      setToDos((allBoards) => {
+        const sourceBoardCopy = [...allBoards[source.droppableId]];
+        const destinationBoardCopy = [...allBoards[destination.droppableId]];
+        sourceBoardCopy.splice(source.index, 1);
+        destinationBoardCopy.splice(destination.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId]: sourceBoardCopy,
+          [destination.droppableId]: destinationBoardCopy
         };
       });
     }
