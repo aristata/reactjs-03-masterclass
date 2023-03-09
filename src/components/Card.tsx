@@ -7,28 +7,27 @@ interface DraggableCardProps {
   index: number;
 }
 
-const Card = styled.div`
+const CardArea = styled.div`
   background-color: ${(props) => props.theme.cardBackgroundColor};
   padding: 10px 10px;
   margin-bottom: 5px;
   border-radius: 5px;
 `;
 
-const DraggableCard = ({ todo, index }: DraggableCardProps) => {
-  console.log(todo, "has been rendered");
+const Card = ({ todo, index }: DraggableCardProps) => {
   return (
     <Draggable draggableId={todo} index={index}>
       {(magic) => (
-        <Card
+        <CardArea
           ref={magic.innerRef}
           {...magic.draggableProps}
           {...magic.dragHandleProps}
         >
           {todo}
-        </Card>
+        </CardArea>
       )}
     </Draggable>
   );
 };
 
-export default React.memo(DraggableCard);
+export default React.memo(Card);
