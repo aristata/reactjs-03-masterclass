@@ -1,5 +1,7 @@
 import { Droppable } from "react-beautiful-dnd";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { ToDoObject } from "../atoms/toDo";
 import Card from "./Card";
 
 const BoardArea = styled.div`
@@ -37,15 +39,37 @@ const DropArea = styled.div<DropAreaProps>`
   padding: 20px;
 `;
 
+const Form = styled.form`
+  width: 100%;
+  input {
+    width: 100%;
+  }
+`;
+
+interface ToDoForm {
+  toDo: string;
+}
+
 interface BoardProps {
-  toDos: string[];
+  toDos: ToDoObject[];
   boardId: string;
 }
 
 const Board = ({ toDos, boardId }: BoardProps) => {
+  const { register, setValue, handleSubmit } = useForm<ToDoForm>();
+  const onValid = ({ toDo }: ToDoForm) => {
+    setValue("toDo", "");
+  };
   return (
     <BoardArea>
       <Title>{boardId}</Title>
+      <Form onSubmit={handleSubmit(onValid)}>
+        <input
+          type={"text"}
+          placeholder={`Add task on ${boardId}`}
+          {...register("toDo", { required: true })}
+        />
+      </Form>
       <Droppable droppableId={boardId}>
         {(provided, info) => (
           <DropArea
@@ -55,7 +79,12 @@ const Board = ({ toDos, boardId }: BoardProps) => {
             {...provided.droppableProps}
           >
             {toDos.map((todo, index) => (
-              <Card key={todo} todo={todo} index={index} />
+              <Card
+                key={todo.id}
+                index={index}
+                toDoId={todo.id}
+                toDoText={todo.text}
+              />
             ))}
             {provided.placeholder}
           </DropArea>
