@@ -26,16 +26,17 @@ const Boards = styled.div`
 const App = () => {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = (info: DropResult) => {
-    const { draggableId, destination, source } = info;
+    const { destination, source } = info;
     if (!destination) return;
     if (destination.droppableId === source.droppableId) {
       // 같은 보드내의 이동
       setToDos((allBoards) => {
         // 1. 소스보드의 배열을 복사한다
         const boardCopy = [...allBoards[source.droppableId]];
+        const taskObject = boardCopy[source.index];
         // 2. 복사한 배열의 순서를 바꾼다
         boardCopy.splice(source.index, 1);
-        boardCopy.splice(destination.index, 0, draggableId);
+        boardCopy.splice(destination.index, 0, taskObject);
         // 3. 바꾼 배열과 나머지 보드들을 합쳐서 내보낸다
         return {
           ...allBoards, // 나머지 보드들은 그대로 복사한다
@@ -47,9 +48,10 @@ const App = () => {
       // 다른 보드로의 이동
       setToDos((allBoards) => {
         const sourceBoardCopy = [...allBoards[source.droppableId]];
+        const taskObject = sourceBoardCopy[source.index];
         const destinationBoardCopy = [...allBoards[destination.droppableId]];
         sourceBoardCopy.splice(source.index, 1);
-        destinationBoardCopy.splice(destination.index, 0, draggableId);
+        destinationBoardCopy.splice(destination.index, 0, taskObject);
         return {
           ...allBoards,
           [source.droppableId]: sourceBoardCopy,
