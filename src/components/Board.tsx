@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { ToDoObject } from "../atoms/toDo";
@@ -10,14 +11,26 @@ const BoardArea = styled.div`
   max-height: 100%;
   width: 300px;
   overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0.6rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${(props) => props.theme.scrollBarColor};
+    border-radius: 0.3rem;
+    background-clip: padding-box;
+    border: 0.2rem solid transparent;
+    transition: background-color 0.3s;
+  }
 `;
 
-const TitleArea = styled.div`
+const TitleArea = styled.div<{ isOpaque: boolean }>`
   background-color: ${(props) => props.theme.titleAreaColor};
   border-radius: 0 0 25px 0;
   position: sticky;
   top: 0;
   transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, opacity 0.3s;
+  opacity: ${(props) => (props.isOpaque ? "0.75" : "1")};
 `;
 
 const Title = styled.h2`
@@ -47,37 +60,24 @@ const DropArea = styled.div<DropAreaProps>`
   padding: 20px;
 `;
 
-const ToDos = styled.ul`
-	display: flex;
-	flex-direction: column;
-	padding: 4.5rem 0.4rem 4rem 1rem;
-	width: 100%;
-	max-height: calc(100vh - 11rem);
-	overflow-x: hidden;
-	overflow-y: scroll;
-
-	&::-webkit-scrollbar {
-		width: 0.6rem;
-	}
-
-	&::-webkit-scrollbar-thumb {
-		background-color: ${(props) => props.theme.scrollBarColor};
-		border-radius: 0.3rem;
-		background-clip: padding-box;
-		border: 0.2rem solid transparent;
-		transition: background-color 0.3s;
-	}
-`;
-
 interface BoardProps {
   toDos: ToDoObject[];
   boardId: string;
 }
 
 const Board = ({ toDos, boardId }: BoardProps) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    if (event.currentTarget.scrollTop > 0) {
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(false);
+    }
+  };
   return (
-    <BoardArea>
-      <TitleArea>
+    <BoardArea onScroll={onScroll}>
+      <TitleArea isOpaque={isScrolled}>
         <Title>{boardId}</Title>
         <InsertForm boardId={boardId} />
       </TitleArea>
