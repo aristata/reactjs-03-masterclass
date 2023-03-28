@@ -5,5 +5,6 @@ export const theme: DefaultTheme = {
   boardBackgroundColor: "#BDCDD6",
   cardBackgroundColor: "#ECF9FF",
   textColor: "#434242",
-  accentColor: "#F7C8E0"
+  accentColor: "#F7C8E0",
+  titleAreaColor: "#F6F1F1"
 };

@@ -4,23 +4,31 @@ import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { ToDoObject, toDoState } from "../atoms/toDo";
 import Card from "./Card";
+import InsertForm from "./InsertForm";
 
 const BoardArea = styled.div`
   background-color: ${(props) => props.theme.boardBackgroundColor};
   min-height: 300px;
   width: 300px;
-  padding-top: 10px;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 `;
 
+const TitleArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: ${(props) => props.theme.titleAreaColor};
+  border-radius: 5px;
+  padding: 10px;
+`;
+
 const Title = styled.h2`
-  text-align: center;
+  font-size: 18px;
   font-weight: 700;
   margin-bottom: 10px;
-  font-size: 18px;
 `;
 
 interface DropAreaProps {
@@ -40,53 +48,18 @@ const DropArea = styled.div<DropAreaProps>`
   padding: 20px;
 `;
 
-const Form = styled.form`
-  width: 100%;
-  display: block;
-
-  input {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 10px;
-    margin: 0 20px;
-  }
-`;
-
-interface ToDoForm {
-  toDo: string;
-}
-
 interface BoardProps {
   toDos: ToDoObject[];
   boardId: string;
 }
 
 const Board = ({ toDos, boardId }: BoardProps) => {
-  const { register, setValue, handleSubmit } = useForm<ToDoForm>();
-  const setToDos = useSetRecoilState(toDoState);
-  const onValid = ({ toDo }: ToDoForm) => {
-    const newToDos = {
-      id: Date.now(),
-      text: toDo
-    };
-    setToDos((allBoards) => {
-      return {
-        ...allBoards,
-        [boardId]: [newToDos, ...allBoards[boardId]]
-      };
-    });
-    setValue("toDo", "");
-  };
   return (
     <BoardArea>
-      <Title>{boardId}</Title>
-      <Form onSubmit={handleSubmit(onValid)}>
-        <input
-          type={"text"}
-          placeholder={`Add task on ${boardId}`}
-          {...register("toDo", { required: true })}
-        />
-      </Form>
+      <TitleArea>
+        <Title>{boardId}</Title>
+        <InsertForm boardId={boardId} />
+      </TitleArea>
       <Droppable droppableId={boardId}>
         {(provided, info) => (
           <DropArea
