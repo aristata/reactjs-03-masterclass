@@ -7,5 +7,6 @@ export const theme: DefaultTheme = {
   textColor: "#434242",
   accentColor: "#F7C8E0",
   titleAreaColor: "#F6F1F1",
-  titleColor: "#434242"
+  titleColor: "#434242",
+  scrollBarColor: "#bababa"
 };

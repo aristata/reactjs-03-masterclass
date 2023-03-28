@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import localStorageEffect from "./localStorageEffect";
 
 export interface ToDoObject {
   id: number;
@@ -15,5 +16,6 @@ export const toDoState = atom<ToDoState>({
     "To Do": [],
     Doing: [],
     Done: []
-  }
+  },
+  effects: [localStorageEffect("toDosLocalStorage")]
 });

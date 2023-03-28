@@ -7,19 +7,17 @@ import InsertForm from "./InsertForm";
 const BoardArea = styled.div`
   background-color: ${(props) => props.theme.boardBackgroundColor};
   min-height: 300px;
+  max-height: 100%;
   width: 300px;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
 `;
 
 const TitleArea = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
   background-color: ${(props) => props.theme.titleAreaColor};
-  border-radius: 5px;
+  border-radius: 0 0 25px 0;
+  position: sticky;
+  top: 0;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, opacity 0.3s;
 `;
 
 const Title = styled.h2`
@@ -27,6 +25,9 @@ const Title = styled.h2`
   font-size: 18px;
   font-weight: 700;
   padding: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 interface DropAreaProps {
@@ -44,6 +45,28 @@ const DropArea = styled.div<DropAreaProps>`
   flex-grow: 1;
   transition: background-color 0.3s ease-in-out;
   padding: 20px;
+`;
+
+const ToDos = styled.ul`
+	display: flex;
+	flex-direction: column;
+	padding: 4.5rem 0.4rem 4rem 1rem;
+	width: 100%;
+	max-height: calc(100vh - 11rem);
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+	&::-webkit-scrollbar {
+		width: 0.6rem;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: ${(props) => props.theme.scrollBarColor};
+		border-radius: 0.3rem;
+		background-clip: padding-box;
+		border: 0.2rem solid transparent;
+		transition: background-color 0.3s;
+	}
 `;
 
 interface BoardProps {

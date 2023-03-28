@@ -43,7 +43,7 @@ const InsertForm = ({ boardId }: InsertFormProps) => {
       };
 
       // 로컬스토리지에 저장
-      localStorage.setItem("ToDoList", JSON.stringify(newBoards));
+      // localStorage.setItem("ToDoList", JSON.stringify(newBoards));
 
       // 리코일에 저장
       return newBoards;

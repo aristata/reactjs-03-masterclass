@@ -9,5 +9,6 @@ declare module "styled-components" {
     accentColor: string;
     titleAreaColor: string;
     titleColor: string;
+    scrollBarColor: string;
   }
 }

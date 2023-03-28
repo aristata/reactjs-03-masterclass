@@ -20,7 +20,6 @@ export const GlobalStyle = createGlobalStyle`
 
   * {
     font-family: 'Pretendard-Regular';
-    font-size: 12pt;    
+    font-size: 10pt;    
   }
-
 `;
