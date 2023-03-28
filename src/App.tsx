@@ -45,6 +45,7 @@ const App = () => {
         // localStorage.setItem("ToDoList", JSON.stringify(newBoards));
         return newBoards;
       });
+      return;
     }
     if (destination.droppableId === source.droppableId) {
       // 같은 보드내의 이동
@@ -66,6 +67,7 @@ const App = () => {
 
         return newBoards;
       });
+      return;
     }
     if (destination.droppableId !== source.droppableId) {
       // 다른 보드로의 이동
@@ -83,6 +85,7 @@ const App = () => {
         // localStorage.setItem("ToDoList", JSON.stringify(newBoards));
         return newBoards;
       });
+      return;
     }
   };
   return (

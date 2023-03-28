@@ -9,19 +9,18 @@ interface DropAreaProps {
 const Wrapper = styled.div`
   position: fixed;
   bottom: 0rem;
-  left: calc(50vw - 15rem);
-  width: 30rem;
-  height: 5rem;
+  left: calc(50vw - 7.5rem);
+  width: 15rem;
+  height: 3rem;
   border-radius: 100rem 100rem 0 0;
   transition: transform 0.3s;
 `;
 
 const TrashArea = styled.div<DropAreaProps>`
-  width: 30rem;
+  width: 15rem;
   height: 5rem;
   border-radius: 100rem 100rem 0 0;
   display: flex;
-  align-items: center;
   justify-content: center;
   background-color: #fd8f7c;
   opacity: ${(props) => (props.isDragging ? 1 : 0.3)};
@@ -38,9 +37,13 @@ const Trash = () => {
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              <DeleteForeverRoundedIcon
-                sx={{ width: "50px", height: "50px" }}
-              />
+              {Boolean(sanpshot.isDraggingOver) ? (
+                <>{provided.placeholder}</>
+              ) : (
+                <DeleteForeverRoundedIcon
+                  sx={{ width: "30px", height: "30px", marginTop: "10px" }}
+                />
+              )}
             </TrashArea>
           </div>
         )}

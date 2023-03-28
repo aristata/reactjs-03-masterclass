@@ -27,6 +27,7 @@ const Card = ({ toDoId, toDoText, index }: DraggableCardProps) => {
     <Draggable draggableId={toDoId.toString()} index={index}>
       {(magic, snapshot) => (
         <CardArea
+          id={toDoId.toString()}
           isDragging={snapshot.isDragging}
           ref={magic.innerRef}
           {...magic.draggableProps}
