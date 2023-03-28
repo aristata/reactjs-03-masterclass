@@ -8,5 +8,6 @@ declare module "styled-components" {
     textColor: string;
     accentColor: string;
     titleAreaColor: string;
+    titleColor: string;
   }
 }

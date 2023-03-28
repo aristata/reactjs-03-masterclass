@@ -2,15 +2,18 @@ import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDoState } from "../atoms/toDo";
+import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
+import { IconButton } from "@mui/material";
 
 const Form = styled.form`
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   input {
     box-sizing: border-box;
-    padding: 0.5em;
-  }
-  button {
-    padding: 0.5em;
-    margin-left: 5px;
+    padding: 10px;
   }
 `;
 
@@ -33,12 +36,19 @@ const InsertForm = ({ boardId }: InsertFormProps) => {
       id: Date.now(),
       text: toDo
     };
-    setToDos((allBoards) => {
-      return {
-        ...allBoards,
-        [boardId]: [newToDos, ...allBoards[boardId]]
+    setToDos((prev) => {
+      const newBoards = {
+        ...prev,
+        [boardId]: [newToDos, ...prev[boardId]]
       };
+
+      // 로컬스토리지에 저장
+      localStorage.setItem("ToDoList", JSON.stringify(newBoards));
+
+      // 리코일에 저장
+      return newBoards;
     });
+
     setValue("toDo", "");
   };
   return (
@@ -48,7 +58,9 @@ const InsertForm = ({ boardId }: InsertFormProps) => {
         placeholder={`Add task on ${boardId}`}
         {...register("toDo", { required: true })}
       />
-      <button type={"submit"}>Add</button>
+      <IconButton type="submit">
+        <PostAddRoundedIcon />
+      </IconButton>
     </Form>
   );
 };

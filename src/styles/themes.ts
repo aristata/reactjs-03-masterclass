@@ -6,5 +6,6 @@ export const theme: DefaultTheme = {
   cardBackgroundColor: "#ECF9FF",
   textColor: "#434242",
   accentColor: "#F7C8E0",
-  titleAreaColor: "#F6F1F1"
+  titleAreaColor: "#F6F1F1",
+  titleColor: "#434242"
 };

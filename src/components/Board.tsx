@@ -22,13 +22,13 @@ const TitleArea = styled.div`
   width: 100%;
   background-color: ${(props) => props.theme.titleAreaColor};
   border-radius: 5px;
-  padding: 10px;
 `;
 
 const Title = styled.h2`
+  color: ${(props) => props.theme.titleColor};
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 10px;
+  padding: 10px;
 `;
 
 interface DropAreaProps {
