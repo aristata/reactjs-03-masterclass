@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { toDoState } from "../atoms/toDo";
 import PostAddRoundedIcon from "@mui/icons-material/PostAddRounded";
 import { IconButton } from "@mui/material";
+import { boardState } from "../atoms/boardAtom";
 
 const Form = styled.form`
   padding: 10px;
@@ -27,7 +27,7 @@ interface InsertFormProps {
 
 const InsertForm = ({ boardId }: InsertFormProps) => {
   // *********************************************************************************************** recoil
-  const setToDos = useSetRecoilState(toDoState);
+  const setBoards = useSetRecoilState(boardState);
 
   // *********************************************************************************************** react hook form
   const { register, setValue, handleSubmit } = useForm<ToDoForm>();
@@ -36,17 +36,15 @@ const InsertForm = ({ boardId }: InsertFormProps) => {
       id: Date.now(),
       text: toDo
     };
-    setToDos((prev) => {
-      const newBoards = {
-        ...prev,
-        [boardId]: [newToDos, ...prev[boardId]]
-      };
-
-      // 로컬스토리지에 저장
-      // localStorage.setItem("ToDoList", JSON.stringify(newBoards));
-
-      // 리코일에 저장
-      return newBoards;
+    setBoards((prev) => {
+      const allBoards = [...prev];
+      const boardIndex = allBoards.findIndex(
+        (board) => board.id.toString() === boardId
+      );
+      const currentBoard = allBoards[boardIndex];
+      currentBoard.toDos = [newToDos, ...currentBoard.toDos];
+      allBoards.splice(boardIndex, 1, currentBoard);
+      return allBoards;
     });
 
     setValue("toDo", "");

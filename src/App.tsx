@@ -1,10 +1,19 @@
 import { GlobalStyle } from "./styles/global-styles";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult
+} from "react-beautiful-dnd";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
-import { toDoState } from "./atoms/toDo";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import Board from "./components/Board";
 import Trash from "./components/Trash";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
+import { boardState } from "./atoms/boardAtom";
+import { modalState } from "./atoms/modal";
+import AddBoardModal from "./components/AddBoardModal";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -22,85 +31,143 @@ const Boards = styled.div`
 `;
 
 const App = () => {
-  const [toDos, setToDos] = useRecoilState(toDoState);
-  const onDragEnd = (info: DropResult) => {
-    const { destination, source } = info;
+  const [boards, setBoards] = useRecoilState(boardState);
+  const setModalState = useSetRecoilState(modalState);
+  const onDragEnd = ({ destination, source }: DropResult) => {
     if (!destination) return;
-    // 드래그로 삭제하기
-    if (destination.droppableId === "trash") {
-      setToDos((allBoards) => {
-        // 기존 소스 보드 복사하기
-        const sourceBoardCopy = [...allBoards[source.droppableId]];
 
-        // 소스 보드에서 1개 삭제하기
-        sourceBoardCopy.splice(source.index, 1);
+    // 보드를 옮길 때
+    if (source.droppableId === "boards") {
+      // 보드를 같은 곳으로 옮기면 취소
+      if (source.index === destination.index) return;
 
-        // 나머지 보드 + 한개 삭제된 소스보드 카피
-        const newBoards = {
-          ...allBoards,
-          [source.droppableId]: sourceBoardCopy
-        };
+      // 보드 순서 변경
+      if (source.index !== destination.index) {
+        setBoards((prev) => {
+          const allBoards = [...prev];
+          const prevBoard = allBoards[source.index];
 
-        // 로컬 스토리지 저장
-        // localStorage.setItem("ToDoList", JSON.stringify(newBoards));
-        return newBoards;
-      });
-      return;
-    }
-    if (destination.droppableId === source.droppableId) {
+          allBoards.splice(source.index, 1);
+          allBoards.splice(destination.index, 0, prevBoard);
+
+          return allBoards;
+        });
+      }
+    } else if (source.droppableId !== "boards") {
+      // 드래그로 삭제하기
+      if (destination.droppableId === "trash") {
+        setBoards((prev) => {
+          const allBoards = [...prev];
+          const boardIndex = allBoards.findIndex(
+            (board) => board.id.toString() === source.droppableId.split("-")[1]
+          );
+          const currentBoard = allBoards[boardIndex];
+          const currentToDos = [...currentBoard.toDos];
+
+          currentToDos.splice(source.index, 1);
+          currentBoard.toDos = currentToDos;
+          allBoards.splice(boardIndex, 1, currentBoard);
+
+          return allBoards;
+        });
+        return;
+      }
       // 같은 보드내의 이동
-      setToDos((allBoards) => {
-        // 1. 소스보드의 배열을 복사한다
-        const boardCopy = [...allBoards[source.droppableId]];
-        const taskObject = boardCopy[source.index];
-        // 2. 복사한 배열의 순서를 바꾼다
-        boardCopy.splice(source.index, 1);
-        boardCopy.splice(destination.index, 0, taskObject);
-        // 3. 바꾼 배열과 나머지 보드들을 합쳐서 내보낸다
-        const newBoards = {
-          ...allBoards, // 나머지 보드들은 그대로 복사한다
-          [source.droppableId]: boardCopy // 소스 보드에는 바뀐 배열을 복사한다
-        };
+      if (destination.droppableId === source.droppableId) {
+        setBoards((prev) => {
+          const toDosCopy = [...prev];
+          const boardIndex = toDosCopy.findIndex(
+            (board) => board.id + "" === source.droppableId.split("-")[1]
+          );
+          const boardCopy = { ...toDosCopy[boardIndex] };
+          const listCopy = [...boardCopy.toDos];
+          const prevToDo = boardCopy.toDos[source.index];
 
-        // 4. 로컬스토리지에 저장한다
-        // localStorage.setItem("ToDoList", JSON.stringify(newBoards));
+          listCopy.splice(source.index, 1);
+          listCopy.splice(destination.index, 0, prevToDo);
 
-        return newBoards;
-      });
-      return;
-    }
-    if (destination.droppableId !== source.droppableId) {
+          boardCopy.toDos = listCopy;
+          toDosCopy.splice(boardIndex, 1, boardCopy);
+
+          return toDosCopy;
+        });
+        return;
+      }
       // 다른 보드로의 이동
-      setToDos((allBoards) => {
-        const sourceBoardCopy = [...allBoards[source.droppableId]];
-        const taskObject = sourceBoardCopy[source.index];
-        const destinationBoardCopy = [...allBoards[destination.droppableId]];
-        sourceBoardCopy.splice(source.index, 1);
-        destinationBoardCopy.splice(destination.index, 0, taskObject);
-        const newBoards = {
-          ...allBoards,
-          [source.droppableId]: sourceBoardCopy,
-          [destination.droppableId]: destinationBoardCopy
-        };
-        // localStorage.setItem("ToDoList", JSON.stringify(newBoards));
-        return newBoards;
-      });
-      return;
+      if (destination.droppableId !== source.droppableId) {
+        setBoards((prev) => {
+          const toDosCopy = [...prev];
+
+          const sourceBoardIndex = toDosCopy.findIndex(
+            (board) => board.id + "" === source.droppableId.split("-")[1]
+          );
+          const destinationBoardIndex = toDosCopy.findIndex(
+            (board) => board.id + "" === destination.droppableId.split("-")[1]
+          );
+
+          const sourceBoardCopy = { ...toDosCopy[sourceBoardIndex] };
+          const destinationBoardCopy = { ...toDosCopy[destinationBoardIndex] };
+
+          const sourceListCopy = [...sourceBoardCopy.toDos];
+          const destinationListCopy = [...destinationBoardCopy.toDos];
+
+          const prevToDo = sourceBoardCopy.toDos[source.index];
+
+          sourceListCopy.splice(source.index, 1);
+          destinationListCopy.splice(destination.index, 0, prevToDo);
+
+          sourceBoardCopy.toDos = sourceListCopy;
+          destinationBoardCopy.toDos = destinationListCopy;
+
+          toDosCopy.splice(sourceBoardIndex, 1, sourceBoardCopy);
+          toDosCopy.splice(destinationBoardIndex, 1, destinationBoardCopy);
+
+          return toDosCopy;
+        });
+        return;
+      }
     }
+  };
+
+  const addBoard = () => {
+    setModalState({
+      isOpen: true
+    });
   };
   return (
     <>
       <GlobalStyle />
       <DragDropContext onDragEnd={onDragEnd}>
         <Wrapper>
-          <Boards>
-            {Object.keys(toDos).map((boardId) => (
-              <Board key={boardId} boardId={boardId} toDos={toDos[boardId]} />
-            ))}
-          </Boards>
+          <Droppable droppableId="boards" direction="horizontal">
+            {(provided) => (
+              <Boards ref={provided.innerRef} {...provided.droppableProps}>
+                {boards.map((board, index) => (
+                  <Draggable
+                    draggableId={"board-dg-" + board.id}
+                    key={board.id}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <Board board={board} parentProvided={provided} />
+                    )}
+                  </Draggable>
+                ))}
+              </Boards>
+            )}
+          </Droppable>
         </Wrapper>
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{ position: "fixed", bottom: 16, right: 16 }}
+          onClick={addBoard}
+        >
+          <AddIcon />
+        </Fab>
         <Trash />
       </DragDropContext>
+      <AddBoardModal />
     </>
   );
 };

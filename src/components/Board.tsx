@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { DraggableProvided, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { ToDoObject } from "../atoms/toDo";
+import { BoardInterface } from "../atoms/boardAtom";
 import Card from "./Card";
 import InsertForm from "./InsertForm";
 
@@ -61,11 +61,11 @@ const DropArea = styled.div<DropAreaProps>`
 `;
 
 interface BoardProps {
-  toDos: ToDoObject[];
-  boardId: string;
+  board: BoardInterface;
+  parentProvided: DraggableProvided;
 }
 
-const Board = ({ toDos, boardId }: BoardProps) => {
+const Board = ({ board, parentProvided }: BoardProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
@@ -78,10 +78,10 @@ const Board = ({ toDos, boardId }: BoardProps) => {
   return (
     <BoardArea onScroll={onScroll}>
       <TitleArea isOpaque={isScrolled}>
-        <Title>{boardId}</Title>
-        <InsertForm boardId={boardId} />
+        <Title>{board.boardName}</Title>
+        <InsertForm boardId={board.id.toString()} />
       </TitleArea>
-      <Droppable droppableId={boardId}>
+      <Droppable droppableId={"board-" + board.id}>
         {(provided, info) => (
           <DropArea
             isDraggingOver={info.isDraggingOver}
@@ -89,7 +89,7 @@ const Board = ({ toDos, boardId }: BoardProps) => {
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {toDos.map((todo, index) => (
+            {board.toDos.map((todo, index) => (
               <Card
                 key={todo.id}
                 index={index}
