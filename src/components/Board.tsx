@@ -1,8 +1,6 @@
 import { Droppable } from "react-beautiful-dnd";
-import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { ToDoObject, toDoState } from "../atoms/toDo";
+import { ToDoObject } from "../atoms/toDo";
 import Card from "./Card";
 import InsertForm from "./InsertForm";
 

@@ -38,10 +38,15 @@ const App = () => {
         boardCopy.splice(source.index, 1);
         boardCopy.splice(destination.index, 0, taskObject);
         // 3. 바꾼 배열과 나머지 보드들을 합쳐서 내보낸다
-        return {
+        const newBoards = {
           ...allBoards, // 나머지 보드들은 그대로 복사한다
           [source.droppableId]: boardCopy // 소스 보드에는 바뀐 배열을 복사한다
         };
+
+        // 4. 로컬스토리지에 저장한다
+        localStorage.setItem("ToDoList", JSON.stringify(newBoards));
+
+        return newBoards;
       });
     }
     if (destination.droppableId !== source.droppableId) {
@@ -52,11 +57,13 @@ const App = () => {
         const destinationBoardCopy = [...allBoards[destination.droppableId]];
         sourceBoardCopy.splice(source.index, 1);
         destinationBoardCopy.splice(destination.index, 0, taskObject);
-        return {
+        const newBoards = {
           ...allBoards,
           [source.droppableId]: sourceBoardCopy,
           [destination.droppableId]: destinationBoardCopy
         };
+        localStorage.setItem("ToDoList", JSON.stringify(newBoards));
+        return newBoards;
       });
     }
   };
