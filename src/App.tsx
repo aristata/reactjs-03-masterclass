@@ -13,6 +13,8 @@ const App = () => {
   const setBoards = useSetRecoilState(boardState);
   const setModalState = useSetRecoilState(modalState);
   const onDragEnd = ({ destination, source }: DropResult) => {
+    console.log(destination, source);
+
     if (!destination) return;
 
     // 보드를 옮길 때

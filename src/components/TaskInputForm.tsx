@@ -38,12 +38,22 @@ const TaskInputForm = ({ boardName, boardId }: InsertFormProps) => {
       text: toDo
     };
     setBoards((prev) => {
-      const allBoards = [...prev];
-      const boardIndex = allBoards.findIndex((board) => board.id === boardId);
-      const currentBoard = allBoards[boardIndex];
+      const prevBoards = [...prev];
+      // console.log("prevBoards1", prevBoards);
+
+      const boardIndex = prevBoards.findIndex((board) => board.id === boardId);
+      // console.log("boardIndex", boardIndex);
+
+      const currentBoard = { ...prevBoards[boardIndex] }; // 객체 복제
+      // console.log("currentBoard1", currentBoard);
+
       currentBoard.toDos = [newToDos, ...currentBoard.toDos];
-      allBoards.splice(boardIndex, 1, currentBoard);
-      return allBoards;
+      // console.log("currentBoard2", currentBoard);
+
+      prevBoards.splice(boardIndex, 1, currentBoard);
+      // console.log("prevBoards2", prevBoards);
+
+      return prevBoards;
     });
 
     setValue("toDo", "");
