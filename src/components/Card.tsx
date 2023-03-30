@@ -8,11 +8,11 @@ interface DraggableCardProps {
   toDoText: string;
 }
 
-interface CardAreaProps {
+interface TaskProps {
   isDragging: boolean;
 }
 
-const CardArea = styled.div<CardAreaProps>`
+const Task = styled.div<TaskProps>`
   background-color: ${(props) =>
     props.isDragging ? "#e4f2ff" : props.theme.cardBackgroundColor};
   padding: 10px;
@@ -24,17 +24,17 @@ const CardArea = styled.div<CardAreaProps>`
 
 const Card = ({ toDoId, toDoText, index }: DraggableCardProps) => {
   return (
-    <Draggable draggableId={toDoId.toString()} index={index}>
-      {(magic, snapshot) => (
-        <CardArea
-          id={toDoId.toString()}
+    <Draggable draggableId={"task-" + toDoId} index={index}>
+      {(provided, snapshot) => (
+        <Task
+          id={"task-" + toDoId}
           isDragging={snapshot.isDragging}
-          ref={magic.innerRef}
-          {...magic.draggableProps}
-          {...magic.dragHandleProps}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
         >
           {toDoText}
-        </CardArea>
+        </Task>
       )}
     </Draggable>
   );

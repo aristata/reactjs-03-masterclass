@@ -1,37 +1,16 @@
 import { GlobalStyle } from "./styles/global-styles";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult
-} from "react-beautiful-dnd";
-import styled from "styled-components";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import Board from "./components/Board";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { useSetRecoilState } from "recoil";
 import Trash from "./components/Trash";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import { boardState } from "./atoms/boardAtom";
 import { modalState } from "./atoms/modal";
 import AddBoardModal from "./components/AddBoardModal";
-
-const Wrapper = styled.div`
-  width: 100vw;
-  height: 80vh;
-  margin: 0 auto;
-  padding: 50px;
-  /* border: 1px solid ${(props) => props.theme.textColor}; */
-`;
-
-const Boards = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  height: 100%;
-`;
+import BoardFrame from "./components/BoardFrame";
 
 const App = () => {
-  const [boards, setBoards] = useRecoilState(boardState);
+  const setBoards = useSetRecoilState(boardState);
   const setModalState = useSetRecoilState(modalState);
   const onDragEnd = ({ destination, source }: DropResult) => {
     if (!destination) return;
@@ -138,35 +117,17 @@ const App = () => {
     <>
       <GlobalStyle />
       <DragDropContext onDragEnd={onDragEnd}>
-        <Wrapper>
-          <Droppable droppableId="boards" direction="horizontal">
-            {(provided) => (
-              <Boards ref={provided.innerRef} {...provided.droppableProps}>
-                {boards.map((board, index) => (
-                  <Draggable
-                    draggableId={"board-dg-" + board.id}
-                    key={board.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <Board board={board} parentProvided={provided} />
-                    )}
-                  </Draggable>
-                ))}
-              </Boards>
-            )}
-          </Droppable>
-        </Wrapper>
-        <Fab
-          color="primary"
-          aria-label="add"
-          sx={{ position: "fixed", bottom: 16, right: 16 }}
-          onClick={addBoard}
-        >
-          <AddIcon />
-        </Fab>
+        <BoardFrame />
         <Trash />
       </DragDropContext>
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={{ position: "fixed", bottom: 16, right: 16 }}
+        onClick={addBoard}
+      >
+        <AddIcon />
+      </Fab>
       <AddBoardModal />
     </>
   );

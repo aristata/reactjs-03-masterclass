@@ -22,10 +22,11 @@ interface ToDoForm {
 }
 
 interface InsertFormProps {
-  boardId: string;
+  boardName: string;
+  boardId: number;
 }
 
-const InsertForm = ({ boardId }: InsertFormProps) => {
+const TaskInputForm = ({ boardName, boardId }: InsertFormProps) => {
   // *********************************************************************************************** recoil
   const setBoards = useSetRecoilState(boardState);
 
@@ -38,9 +39,7 @@ const InsertForm = ({ boardId }: InsertFormProps) => {
     };
     setBoards((prev) => {
       const allBoards = [...prev];
-      const boardIndex = allBoards.findIndex(
-        (board) => board.id.toString() === boardId
-      );
+      const boardIndex = allBoards.findIndex((board) => board.id === boardId);
       const currentBoard = allBoards[boardIndex];
       currentBoard.toDos = [newToDos, ...currentBoard.toDos];
       allBoards.splice(boardIndex, 1, currentBoard);
@@ -53,7 +52,7 @@ const InsertForm = ({ boardId }: InsertFormProps) => {
     <Form onSubmit={handleSubmit(onValid)}>
       <input
         type={"text"}
-        placeholder={`Add task on ${boardId}`}
+        placeholder={`Add task on ${boardName}`}
         {...register("toDo", { required: true })}
       />
       <IconButton type="submit">
@@ -63,4 +62,4 @@ const InsertForm = ({ boardId }: InsertFormProps) => {
   );
 };
 
-export default InsertForm;
+export default TaskInputForm;

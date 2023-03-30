@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { DraggableProvided, Droppable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { BoardInterface } from "../atoms/boardAtom";
 import Card from "./Card";
-import InsertForm from "./InsertForm";
+import TaskInputForm from "./TaskInputForm";
 
 const BoardArea = styled.div`
   background-color: ${(props) => props.theme.boardBackgroundColor};
@@ -48,7 +48,7 @@ interface DropAreaProps {
   isDraggingFromThis: boolean;
 }
 
-const DropArea = styled.div<DropAreaProps>`
+const CardDropArea = styled.div<DropAreaProps>`
   background-color: ${(props) =>
     props.isDraggingOver
       ? "#dfe6e9"
@@ -62,10 +62,10 @@ const DropArea = styled.div<DropAreaProps>`
 
 interface BoardProps {
   board: BoardInterface;
-  parentProvided: DraggableProvided;
+  index: number;
 }
 
-const Board = ({ board, parentProvided }: BoardProps) => {
+const Board = ({ board, index }: BoardProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
@@ -76,32 +76,42 @@ const Board = ({ board, parentProvided }: BoardProps) => {
     }
   };
   return (
-    <BoardArea onScroll={onScroll}>
-      <TitleArea isOpaque={isScrolled}>
-        <Title>{board.boardName}</Title>
-        <InsertForm boardId={board.id.toString()} />
-      </TitleArea>
-      <Droppable droppableId={"board-" + board.id}>
-        {(provided, info) => (
-          <DropArea
-            isDraggingOver={info.isDraggingOver}
-            isDraggingFromThis={Boolean(info.draggingFromThisWith)}
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
-            {board.toDos.map((todo, index) => (
-              <Card
-                key={todo.id}
-                index={index}
-                toDoId={todo.id}
-                toDoText={todo.text}
-              />
-            ))}
-            {provided.placeholder}
-          </DropArea>
-        )}
-      </Droppable>
-    </BoardArea>
+    <Draggable draggableId={"board-" + board.id} key={board.id} index={index}>
+      {(provided) => (
+        <BoardArea
+          onScroll={onScroll}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <TitleArea isOpaque={isScrolled}>
+            <Title>{board.boardName}</Title>
+            <TaskInputForm boardName={board.boardName} boardId={board.id} />
+          </TitleArea>
+          <Droppable droppableId={"board-" + board.id}>
+            {(provided, snapshot) => (
+              <CardDropArea
+                isDraggingOver={snapshot.isDraggingOver}
+                isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {board.toDos.map((todo, index) => (
+                  <Card
+                    key={todo.id}
+                    index={index}
+                    toDoId={todo.id}
+                    toDoText={todo.text}
+                  />
+                ))}
+
+                {provided.placeholder}
+              </CardDropArea>
+            )}
+          </Droppable>
+        </BoardArea>
+      )}
+    </Draggable>
   );
 };
 
