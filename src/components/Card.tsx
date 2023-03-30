@@ -1,11 +1,16 @@
-import React from "react";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
+import EditRounded from "@mui/icons-material/EditRounded";
+import TaskUpdateForm from "./TaskUpdateForm";
 
 interface DraggableCardProps {
   index: number;
   toDoId: number;
   toDoText: string;
+  boardId: number;
 }
 
 interface TaskProps {
@@ -22,7 +27,13 @@ const Task = styled.div<TaskProps>`
     props.isDragging ? "0px 4px 8px rgba(0, 0, 0, 0.05)" : "none"};
 `;
 
-const Card = ({ toDoId, toDoText, index }: DraggableCardProps) => {
+const Card = ({ toDoId, toDoText, index, boardId }: DraggableCardProps) => {
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const changeMode = (isUpdating: boolean) => {
+    setIsUpdating(isUpdating);
+  };
+
   return (
     <Draggable draggableId={"task-" + toDoId} index={index}>
       {(provided, snapshot) => (
@@ -33,7 +44,25 @@ const Card = ({ toDoId, toDoText, index }: DraggableCardProps) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          {toDoText}
+          {isUpdating ? (
+            <TaskUpdateForm
+              toDoId={toDoId}
+              toDoText={toDoText}
+              boardId={boardId}
+              changeMode={changeMode}
+            />
+          ) : (
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <span>{toDoText}</span>
+              <IconButton onClick={() => changeMode(true)}>
+                <EditRounded />
+              </IconButton>
+            </Stack>
+          )}
         </Task>
       )}
     </Draggable>

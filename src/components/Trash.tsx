@@ -1,7 +1,6 @@
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
-import BoardFrame from "./BoardFrame";
 
 interface DropAreaProps {
   isDragging: boolean;

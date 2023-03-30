@@ -136,6 +136,7 @@ const Board = ({ board, index }: BoardProps) => {
                     index={index}
                     toDoId={todo.id}
                     toDoText={todo.text}
+                    boardId={board.id}
                   />
                 ))}
 
