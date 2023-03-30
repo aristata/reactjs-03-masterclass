@@ -1,6 +1,7 @@
 import { Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+import BoardFrame from "./BoardFrame";
 
 interface DropAreaProps {
   isDragging: boolean;
@@ -29,7 +30,7 @@ const TrashArea = styled.div<DropAreaProps>`
 const Trash = () => {
   return (
     <Wrapper>
-      <Droppable droppableId="trash">
+      <Droppable droppableId="trash" type="BOARD">
         {(provided, sanpshot) => (
           <div>
             <TrashArea

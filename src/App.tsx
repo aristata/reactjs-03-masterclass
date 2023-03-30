@@ -42,7 +42,7 @@ const App = () => {
           const boardIndex = allBoards.findIndex(
             (board) => board.id.toString() === source.droppableId.split("-")[1]
           );
-          const currentBoard = allBoards[boardIndex];
+          const currentBoard = { ...allBoards[boardIndex] };
           const currentToDos = [...currentBoard.toDos];
 
           currentToDos.splice(source.index, 1);

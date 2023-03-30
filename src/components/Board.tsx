@@ -2,10 +2,13 @@ import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { BoardInterface } from "../atoms/boardAtom";
+import { BoardInterface, boardState } from "../atoms/boardAtom";
 import Card from "./Card";
 import TaskInputForm from "./TaskInputForm";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import { useSetRecoilState } from "recoil";
 
 const BoardArea = styled.div`
   background-color: ${(props) => props.theme.boardBackgroundColor};
@@ -70,6 +73,7 @@ interface BoardProps {
 
 const Board = ({ board, index }: BoardProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const setBoards = useSetRecoilState(boardState);
 
   const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
     if (event.currentTarget.scrollTop > 0) {
@@ -77,6 +81,15 @@ const Board = ({ board, index }: BoardProps) => {
     } else {
       setIsScrolled(false);
     }
+  };
+
+  const deleteBoard = () => {
+    setBoards((prev) => {
+      const boardsCopy = [...prev];
+      const currentBoardIndex = boardsCopy.findIndex((b) => b.id === board.id);
+      boardsCopy.splice(currentBoardIndex, 1);
+      return boardsCopy;
+    });
   };
   return (
     <Draggable draggableId={"board-" + board.id} key={board.id} index={index}>
@@ -93,9 +106,19 @@ const Board = ({ board, index }: BoardProps) => {
               justifyContent={"space-between"}
             >
               <Title>{board.boardName}</Title>
-              <div {...provided.dragHandleProps}>
-                <DragIndicatorIcon sx={{ pr: "20px" }} />
-              </div>
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                spacing={1}
+              >
+                <IconButton onClick={deleteBoard}>
+                  <DeleteIcon />
+                </IconButton>
+                <div {...provided.dragHandleProps}>
+                  <DragIndicatorIcon />
+                </div>
+              </Stack>
             </Stack>
             <TaskInputForm boardName={board.boardName} boardId={board.id} />
           </TitleArea>
