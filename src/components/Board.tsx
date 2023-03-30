@@ -1,9 +1,11 @@
+import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { BoardInterface } from "../atoms/boardAtom";
 import Card from "./Card";
 import TaskInputForm from "./TaskInputForm";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 
 const BoardArea = styled.div`
   background-color: ${(props) => props.theme.boardBackgroundColor};
@@ -25,6 +27,7 @@ const BoardArea = styled.div`
 `;
 
 const TitleArea = styled.div<{ isOpaque: boolean }>`
+  padding: 10px;
   background-color: ${(props) => props.theme.titleAreaColor};
   border-radius: 0 0 25px 0;
   position: sticky;
@@ -82,10 +85,18 @@ const Board = ({ board, index }: BoardProps) => {
           onScroll={onScroll}
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
         >
           <TitleArea isOpaque={isScrolled}>
-            <Title>{board.boardName}</Title>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <Title>{board.boardName}</Title>
+              <div {...provided.dragHandleProps}>
+                <DragIndicatorIcon sx={{ pr: "20px" }} />
+              </div>
+            </Stack>
             <TaskInputForm boardName={board.boardName} boardId={board.id} />
           </TitleArea>
           <Droppable droppableId={"board-" + board.id}>
