@@ -13,6 +13,7 @@ export const GlobalStyle = createGlobalStyle`
     font-style: normal;
   }
 
+
   body {
     background-color: ${(props) => props.theme.backgroundColor};
     color: ${(props) => props.theme.textColor}
@@ -20,6 +21,7 @@ export const GlobalStyle = createGlobalStyle`
 
   * {
     font-family: 'Pretendard-Regular';
-    font-size: 10pt;    
+    font-size: 10pt;
+    box-sizing: border-box;    
   }
 `;
