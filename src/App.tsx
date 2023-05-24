@@ -68,7 +68,14 @@ const circleMotion = {
 // 제스쳐와 variants 결합
 const variantsWithGesture = {
   hover: { scale: 1.5, rotateZ: 90 },
-  click: { scale: 1, borderRadius: "100px", backgroundColor: "#F9F5F6" }
+  click: {
+    scale: 1,
+    borderRadius: "100px"
+  },
+  drag: {
+    backgroundColor: "rgba(255, 234, 167,1.0)",
+    transition: { duration: 10 }
+  }
 };
 
 function App() {
@@ -85,9 +92,11 @@ function App() {
         <Box
           // whileHover={{ scale: 1.5, rotateZ: 90 }}
           // whileTap={{ scale: 1, borderRadius: "100px" }}
+          drag
           variants={variantsWithGesture}
           whileHover={"hover"}
           whileTap={"click"}
+          whileDrag={"drag"}
         ></Box>
       </Chapter>
     </Wrapper>
@@ -111,6 +120,10 @@ export default App;
  * - 마우스 호버시
  * whileTap
  * - 마우스 클릭시
+ * whileDrag
+ * - 마우스 드래그시
+ * drag
+ * - 이 객체를 드래그 가능하게 해준다
  *
  * variants 와 결합하여 사용 가능
  *************************************************************************************************/
