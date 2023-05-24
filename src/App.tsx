@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -9,12 +9,15 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  row-gap: 20px;
+  gap: 32px;
 `;
 
-const Chapter = styled.div`
+const Chapter = styled(motion.div)`
+  width: 350px;
+  height: 350px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 `;
 
 const Box = styled(motion.div)`
@@ -65,6 +68,16 @@ const circleMotion = {
   }
 };
 
+const NomalBox = styled(motion.div)`
+  width: 200px;
+  height: 200px;
+  background-color: rgba(223, 230, 233, 1);
+  border-radius: 40px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+`;
+
 // 제스쳐와 variants 결합
 const variantsWithGesture = {
   hover: { scale: 1.5, rotateZ: 90 },
@@ -78,7 +91,19 @@ const variantsWithGesture = {
   }
 };
 
+// 제약 박스
+const BiggerBox = styled(motion.div)`
+  width: 350px;
+  height: 350px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 function App() {
+  const biggerBoxRef = useRef<HTMLDivElement>(null);
   return (
     <Wrapper>
       <Box variants={boxMotion} initial={"start"} animate={"end"}>
@@ -89,7 +114,7 @@ function App() {
       </Box>
       <Chapter>
         <span>8.5 제스쳐</span>
-        <Box
+        <NomalBox
           // whileHover={{ scale: 1.5, rotateZ: 90 }}
           // whileTap={{ scale: 1, borderRadius: "100px" }}
           drag
@@ -97,7 +122,21 @@ function App() {
           whileHover={"hover"}
           whileTap={"click"}
           whileDrag={"drag"}
-        ></Box>
+        ></NomalBox>
+      </Chapter>
+      <Chapter>
+        <span>8.6 드래그 제약조건</span>
+        <BiggerBox ref={biggerBoxRef}>
+          <NomalBox
+            drag
+            // dragSnapToOrigin
+            dragElastic={0.5}
+            dragConstraints={biggerBoxRef}
+            variants={variantsWithGesture}
+            whileHover={"hover"}
+            whileTap={"click"}
+          ></NomalBox>
+        </BiggerBox>
       </Chapter>
     </Wrapper>
   );
