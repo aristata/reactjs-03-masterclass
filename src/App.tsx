@@ -6,8 +6,15 @@ const Wrapper = styled.div`
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  row-gap: 20px;
+`;
+
+const Chapter = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Box = styled(motion.div)`
@@ -58,6 +65,12 @@ const circleMotion = {
   }
 };
 
+// 제스쳐와 variants 결합
+const variantsWithGesture = {
+  hover: { scale: 1.5, rotateZ: 90 },
+  click: { scale: 1, borderRadius: "100px", backgroundColor: "#F9F5F6" }
+};
+
 function App() {
   return (
     <Wrapper>
@@ -67,6 +80,16 @@ function App() {
         <Circle variants={circleMotion}></Circle>
         <Circle variants={circleMotion}></Circle>
       </Box>
+      <Chapter>
+        <span>8.5 제스쳐</span>
+        <Box
+          // whileHover={{ scale: 1.5, rotateZ: 90 }}
+          // whileTap={{ scale: 1, borderRadius: "100px" }}
+          variants={variantsWithGesture}
+          whileHover={"hover"}
+          whileTap={"click"}
+        ></Box>
+      </Chapter>
     </Wrapper>
   );
 }
@@ -79,4 +102,15 @@ export default App;
  * - variants 는 컴포넌트가 가질 수 있는 미리 정의된 시각적 state 이다
  * - https://www.framer.com/motion/introduction/##variants
  *
+ *************************************************************************************************/
+
+/*************************************************************************************************
+ * Gestures
+ *
+ * whileHover
+ * - 마우스 호버시
+ * whileTap
+ * - 마우스 클릭시
+ *
+ * variants 와 결합하여 사용 가능
  *************************************************************************************************/
