@@ -1,23 +1,12 @@
+import { motion, useMotionValue } from "framer-motion";
 import styled from "styled-components";
-import { motion } from "framer-motion";
-import { useRef, useState } from "react";
 
 const Wrapper = styled.div`
   height: 100vh;
   width: 100vw;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 32px;
-`;
-
-const Chapter = styled(motion.div)`
-  width: 350px;
-  height: 350px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
 `;
 
 const Box = styled(motion.div)`
@@ -26,143 +15,28 @@ const Box = styled(motion.div)`
   background-color: ${(props) => props.theme.boxColor};
   border-radius: 40px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-`;
-
-const Circle = styled(motion.div)`
-  width: 70px;
-  height: 70px;
-  background-color: ${(props) => props.theme.circleColor};
-  border-radius: 35px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-  place-self: center;
-`;
-
-const boxMotion = {
-  start: {
-    opacity: 0,
-    scale: 0.5
-  },
-  end: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      type: "spring",
-      duration: 0.5,
-      bounce: 0.5,
-      delayChildren: 0.5,
-      staggerChildren: 0.2
-    }
-  }
-};
-
-const circleMotion = {
-  start: {
-    opacity: 0,
-    y: 10
-  },
-  end: {
-    opacity: 1,
-    y: 0
-  }
-};
-
-const NomalBox = styled(motion.div)`
-  width: 200px;
-  height: 200px;
-  background-color: rgba(223, 230, 233, 1);
-  border-radius: 40px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-`;
-
-// 제스쳐와 variants 결합
-const variantsWithGesture = {
-  hover: { scale: 1.5, rotateZ: 90 },
-  click: {
-    scale: 1,
-    borderRadius: "100px"
-  },
-  drag: {
-    backgroundColor: "rgba(255, 234, 167,1.0)",
-    transition: { duration: 10 }
-  }
-};
-
-// 제약 박스
-const BiggerBox = styled(motion.div)`
-  width: 350px;
-  height: 350px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 function App() {
-  const biggerBoxRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
   return (
     <Wrapper>
-      <Box variants={boxMotion} initial={"start"} animate={"end"}>
-        <Circle variants={circleMotion}></Circle>
-        <Circle variants={circleMotion}></Circle>
-        <Circle variants={circleMotion}></Circle>
-        <Circle variants={circleMotion}></Circle>
-      </Box>
-      <Chapter>
-        <span>8.5 제스쳐</span>
-        <NomalBox
-          // whileHover={{ scale: 1.5, rotateZ: 90 }}
-          // whileTap={{ scale: 1, borderRadius: "100px" }}
-          drag
-          variants={variantsWithGesture}
-          whileHover={"hover"}
-          whileTap={"click"}
-          whileDrag={"drag"}
-        ></NomalBox>
-      </Chapter>
-      <Chapter>
-        <span>8.6 드래그 제약조건</span>
-        <BiggerBox ref={biggerBoxRef}>
-          <NomalBox
-            drag
-            // dragSnapToOrigin
-            dragElastic={0.5}
-            dragConstraints={biggerBoxRef}
-            variants={variantsWithGesture}
-            whileHover={"hover"}
-            whileTap={"click"}
-          ></NomalBox>
-        </BiggerBox>
-      </Chapter>
+      <Box style={{ x }} drag="x" dragSnapToOrigin></Box>
     </Wrapper>
   );
 }
 
 export default App;
 
-/*************************************************************************************************
- * step2
- * variants
- * - variants 는 컴포넌트가 가질 수 있는 미리 정의된 시각적 state 이다
- * - https://www.framer.com/motion/introduction/##variants
+/***************************************************************************************************
+ * Motion value (이하 모션밸류)
  *
- *************************************************************************************************/
-
-/*************************************************************************************************
- * Gestures
+ * 모든 `motion` 컴포넌트들은 내부적으로 모션밸류를 사용한다.
+ * 모션밸류는 애니메이션의 상태와 속도를 추적하는 값이다.
  *
- * whileHover
- * - 마우스 호버시
- * whileTap
- * - 마우스 클릭시
- * whileDrag
- * - 마우스 드래그시
- * drag
- * - 이 객체를 드래그 가능하게 해준다
- *
- * variants 와 결합하여 사용 가능
- *************************************************************************************************/
+ * 보통 모션밸류는 자동으로 만들어지는데, 경우에 따라 `useMotionValue()` hook 을 사용하여 수동으로 구현할 수 있다.
+ * 모션밸류를 수동으로 구현함으로써 다음과 같은 일을 할 수 있다.
+ * - 그들의 스테이트를 get 하거나 set 할 수 있다.
+ * - 여러 컴포넌트에 모션밸류를 전달하여 그들을 동기화 시킬 수 있다.
+ * - React 랜더링 사이클을 트리거하지 않고 시각적 속성들을 업데이트 할 수 있다.(중요)
+ ***************************************************************************************************/
