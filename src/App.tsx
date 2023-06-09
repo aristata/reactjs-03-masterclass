@@ -1,8 +1,9 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useScroll, useTransform } from "framer-motion";
+import { useEffect } from "react";
 import styled from "styled-components";
 
-const Wrapper = styled.div`
-  height: 100vh;
+const Wrapper = styled(motion.div)`
+  height: 200vh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -30,10 +31,48 @@ function App() {
    * - 세번째 인자는 반환값의 변화 범위를 배열로 받음
    * - 두번째 인자의 배열 크기와 세번째 인자의 배열 크기가 같아야 함
    *************************************************************************************************/
-  const scale = useTransform(x, [-800, 0, 800], [2, 1, 0.1]);
+  // const scale = useTransform(x, [-800, 0, 800], [2, 1, 0.1]);
+
+  /*************************************************************************************************
+   * 회전
+   *************************************************************************************************/
+  const rotateZ = useTransform(x, [-800, 800], [-360, 360]);
+
+  /*************************************************************************************************
+   * 배경색
+   *
+   * - Wrapper 의 백그라운드칼라를 변경할 계획이다
+   * - styled.div 에 바로 사용할 수 없기 때문에 다음과 같이 수정한다
+   * - styled(motion.div)
+   *************************************************************************************************/
+  const gradient = useTransform(
+    x,
+    [-800, 800],
+    [
+      "linear-gradient(135deg, rgb(80, 219, 238), rgb(23, 97, 209))",
+      "linear-gradient(135deg, rgb(53, 201, 102), rgb(200, 231, 59))"
+    ]
+  );
+
+  /*************************************************************************************************
+   * useScroll
+   *
+   * - 스크롤 이벤트의 모션밸류를 얻을 수 있는 핼퍼 펑션(훅)
+   * - scrollX, scrollY, scrollXProgress, scrollYProgress 등 값을 반환한다
+   * - scrollY 는 y축이 움직인 pixel 을 값으로 주고
+   * - scrollYProgress 는 y축이 움직인 정도를 0 ~ 1 사이의 값으로 준다
+   *************************************************************************************************/
+  const { scrollY, scrollYProgress } = useScroll();
+  // useEffect(() => {
+  //   scrollY.on("change", () => {
+  //     console.log("scrollY: " + scrollY.get());
+  //     console.log("scrollYProgress: " + scrollYProgress.get());
+  //   });
+  // }, [scrollY, scrollYProgress]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.1, 2]);
   return (
-    <Wrapper>
-      <Box style={{ x, scale }} drag="x" dragSnapToOrigin></Box>
+    <Wrapper style={{ background: gradient }}>
+      <Box style={{ x, rotateZ, scale }} drag="x" dragSnapToOrigin></Box>
     </Wrapper>
   );
 }
