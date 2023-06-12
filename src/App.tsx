@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { GlobalStyle } from "./styles/global-styles";
 import Ch811 from "../src/lectures/8.11_AnimatePresence";
+import Ch812 from "../src/lectures/8.12_Slider_1";
 
 const Title = styled.div`
   color: #424242;
@@ -22,6 +23,7 @@ const Lecture = styled.div`
   align-items: center;
   row-gap: 20px;
   padding: 20px;
+  position: relative;
 `;
 
 const LectureTitle = styled.h4`
@@ -37,6 +39,11 @@ function App() {
       <Lecture>
         <LectureTitle>8.11 Animate Presence</LectureTitle>
         <Ch811 />
+      </Lecture>
+      <HrLine />
+      <Lecture>
+        <LectureTitle>8.12 Slider 1</LectureTitle>
+        <Ch812 />
       </Lecture>
     </>
   );
