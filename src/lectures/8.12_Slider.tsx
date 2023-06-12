@@ -28,49 +28,57 @@ const Box = styled(motion.div)`
 `;
 
 const BoxVariants = {
-  invisible: {
-    x: 500,
-    opacity: 0,
-    scale: 0
+  invisible: (isBack: boolean) => {
+    return {
+      x: isBack ? -500 : 500,
+      opacity: 0,
+      scale: 0
+    };
   },
   visible: {
     x: 0,
     opacity: 1,
     scale: 1,
     transition: {
-      duration: 1
+      duration: 0.5
     }
   },
-  exit: {
-    x: -500,
-    opacity: 0,
-    scale: 0,
-    transition: {
-      duration: 1
-    }
+  exit: (isBack: boolean) => {
+    return {
+      x: isBack ? 500 : -500,
+      opacity: 0,
+      scale: 0,
+      transition: {
+        duration: 0.5
+      }
+    };
   }
 };
 
 const Slider = () => {
-  const [visible, setVisible] = useState(1);
-  const next = () => setVisible((prev) => (prev === 10 ? 1 : prev + 1));
-  const prev = () => setVisible((prev) => (prev === 1 ? 10 : prev - 1));
+  const [number, setNumber] = useState(1);
+  const [isBack, setIsBack] = useState(false);
+  const next = () => {
+    setIsBack(false);
+    setNumber((prev) => (prev === 10 ? 1 : prev + 1));
+  };
+  const prev = () => {
+    setIsBack(true);
+    setNumber((prev) => (prev === 1 ? 10 : prev - 1));
+  };
   return (
     <>
       <AnimatePresence>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
-          i === visible ? (
-            <Box
-              variants={BoxVariants}
-              initial="invisible"
-              animate="visible"
-              exit="exit"
-              key={i}
-            >
-              {i}
-            </Box>
-          ) : null
-        )}
+        <Box
+          variants={BoxVariants}
+          initial="invisible"
+          animate="visible"
+          exit="exit"
+          key={number}
+          custom={isBack}
+        >
+          {number}
+        </Box>
       </AnimatePresence>
       <ButtonArea>
         <Button onClick={next}>next</Button>

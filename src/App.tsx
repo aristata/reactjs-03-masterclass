@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { GlobalStyle } from "./styles/global-styles";
 import Ch811 from "../src/lectures/8.11_AnimatePresence";
-import Ch812 from "../src/lectures/8.12_Slider_1";
+import Ch812 from "./lectures/8.12_Slider";
 
 const Title = styled.div`
   color: #424242;
@@ -42,7 +42,7 @@ function App() {
       </Lecture>
       <HrLine />
       <Lecture>
-        <LectureTitle>8.12 Slider 1</LectureTitle>
+        <LectureTitle>8.12 Slider</LectureTitle>
         <Ch812 />
       </Lecture>
     </>
