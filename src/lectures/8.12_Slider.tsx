@@ -2,6 +2,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import styled from "styled-components";
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const Button = styled.button`
   width: 100px;
   padding: 8px;
@@ -13,13 +18,12 @@ const ButtonArea = styled.div`
   display: flex;
   column-gap: 4px;
 `;
+
 const Box = styled(motion.div)`
-  width: 400px;
-  height: 200px;
+  width: 200px;
+  height: 100px;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 40px;
-  position: absolute;
-  top: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,18 +72,20 @@ const Slider = () => {
   };
   return (
     <>
-      <AnimatePresence>
-        <Box
-          variants={BoxVariants}
-          initial="invisible"
-          animate="visible"
-          exit="exit"
-          key={number}
-          custom={isBack}
-        >
-          {number}
-        </Box>
-      </AnimatePresence>
+      <Wrapper>
+        <AnimatePresence>
+          <Box
+            variants={BoxVariants}
+            initial="invisible"
+            animate="visible"
+            exit="exit"
+            key={number}
+            custom={isBack}
+          >
+            {number}
+          </Box>
+        </AnimatePresence>
+      </Wrapper>
       <ButtonArea>
         <Button onClick={next}>next</Button>
         <Button onClick={prev}>prev</Button>
