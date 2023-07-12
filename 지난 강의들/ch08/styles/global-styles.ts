@@ -13,6 +13,11 @@ export const GlobalStyle = createGlobalStyle`
     font-style: normal;
   }
 
+
+  body {
+    background: linear-gradient(135deg, rgb(170, 189, 142), rgb(220, 227, 209))
+  }
+
   * {
     font-family: 'Pretendard-Regular';
     font-size: 10pt;
