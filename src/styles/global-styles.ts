@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
 
   * {
     font-family: 'Pretendard-Regular';
-    font-size: 10pt;
+    font-size: 12pt;
     box-sizing: border-box;    
   }
 `;
