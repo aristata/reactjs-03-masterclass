@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { Link, useMatch } from "react-router-dom";
 import { useState } from "react";
 
@@ -98,7 +98,15 @@ const Search = styled.span`
 const SearchInput = styled(motion.input)`
   transform-origin: right center;
   position: absolute;
-  left: -150px;
+  right: 0px;
+  padding: 5px 10px;
+  padding-left: 40px;
+  z-index: -1;
+  color: white;
+  font-size: 16px;
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.white.lighter};
+  border-radius: 10px;
 `;
 
 const Header = () => {
@@ -114,7 +122,26 @@ const Header = () => {
    * 서치 아이콘 클릭
    *************************************************************************************************/
   const [searchOpen, setSearchOpen] = useState(false);
+  // const toggleSearch = () => {
+  //   setSearchOpen((prev) => !prev);
+  // };
+
+  /*************************************************************************************************
+   * useAnimation 훅을 사용한 애니메이션 컨트롤
+   *
+   * - useAnimation 훅을 사용하여 애니메이션을 스크립트로 제어할 수 있다
+   *************************************************************************************************/
+  const inputAnimation = useAnimation();
   const toggleSearch = () => {
+    if (searchOpen) {
+      inputAnimation.start({
+        scaleX: 0
+      });
+    } else {
+      inputAnimation.start({
+        scaleX: 1
+      });
+    }
     setSearchOpen((prev) => !prev);
   };
   return (
@@ -148,7 +175,7 @@ const Header = () => {
         <Search>
           <motion.svg
             onClick={toggleSearch}
-            animate={{ x: searchOpen ? -180 : 0 }}
+            animate={{ x: searchOpen ? -230 : 0 }}
             transition={{ type: "linear" }}
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -161,7 +188,8 @@ const Header = () => {
             ></path>
           </motion.svg>
           <SearchInput
-            animate={{ scaleX: searchOpen ? 1 : 0 }}
+            animate={inputAnimation}
+            initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
             placeholder="Search for movie or tv show ..."
           />
