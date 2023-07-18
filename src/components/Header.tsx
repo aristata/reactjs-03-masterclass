@@ -1,9 +1,15 @@
 import styled from "styled-components";
-import { motion, useAnimation } from "framer-motion";
+import {
+  motion,
+  useAnimation,
+  useMotionValueEvent,
+  useScroll,
+  useViewportScroll
+} from "framer-motion";
 import { Link, useMatch } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,6 +21,15 @@ const Nav = styled.nav`
   padding: 20px 60px;
   color: white;
 `;
+
+const navVariants = {
+  top: {
+    backgroundColor: "rgba(0, 0, 0, 0)"
+  },
+  scroll: {
+    backgroundColor: "rgba(0, 0, 0, 1)"
+  }
+};
 
 const Col = styled.div`
   display: flex;
@@ -144,8 +159,27 @@ const Header = () => {
     }
     setSearchOpen((prev) => !prev);
   };
+
+  /*************************************************************************************************
+   * 스크롤 이벤트
+   *
+   * - useAnimation 을 사용해서 navAnimation 만들기
+   * - useViewportScroll 을 사용해서 scrollY 값 가져오기
+   *   - useViewportScroll 은 deprecated 되었다
+   *   - useScroll 을 사용할 것
+   *************************************************************************************************/
+  const navAnimation = useAnimation();
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    console.log("scrollY: " + latest);
+    if (latest > 80) {
+      navAnimation.start("scroll");
+    } else {
+      navAnimation.start("top");
+    }
+  });
   return (
-    <Nav>
+    <Nav variants={navVariants} animate={navAnimation} initial={"top"}>
       <Col>
         <Logo
           variants={logoVariants}
