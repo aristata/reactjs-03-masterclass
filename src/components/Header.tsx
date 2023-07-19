@@ -3,11 +3,10 @@ import {
   motion,
   useAnimation,
   useMotionValueEvent,
-  useScroll,
-  useViewportScroll
+  useScroll
 } from "framer-motion";
 import { Link, useMatch } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Nav = styled(motion.nav)`
   display: flex;
