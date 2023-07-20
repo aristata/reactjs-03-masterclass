@@ -18,6 +18,17 @@ const GlobalStyle = createGlobalStyle`
     font-size: 12pt;
     box-sizing: border-box;    
   }
+
+  body {
+    background-color: black;
+    color:${(props) => props.theme.white.darker};
+    line-height: 1.4;
+  }
+
+  a {
+    text-decoration:none;
+    color:inherit;
+  }
 `;
 
 export default GlobalStyle;
