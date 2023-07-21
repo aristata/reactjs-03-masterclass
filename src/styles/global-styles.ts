@@ -30,6 +30,11 @@ const GlobalStyle = createGlobalStyle`
     text-decoration:none;
     color:inherit;
   }
+
+  /* 스크롤바 감추기 */
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export default GlobalStyle;
