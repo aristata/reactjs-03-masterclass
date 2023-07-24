@@ -5,6 +5,7 @@ import { makeImagePath } from "../utils/makeImagePath";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { MoviesResult } from "../apis/types/Movie";
+import { useMatch, useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   height: "500vh";
@@ -65,6 +66,7 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   &:last-child {
     transform-origin: center right;
   }
+  cursor: pointer;
 `;
 
 const BoxInfo = styled(motion.div)`
@@ -121,6 +123,8 @@ const boxInfoVariants = {
 const offset = 6;
 
 const Home = () => {
+  const navigate = useNavigate();
+  const moviePathMatch = useMatch("/movies/:movieId");
   const { data, isLoading } = useQuery<MoviesResult>(
     ["getMovies", "nowPlaying"],
     getMoviesNowPlaying
@@ -139,6 +143,9 @@ const Home = () => {
     }
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
+  const onBoxClicked = (movieId: number) => {
+    navigate(`/movies/${movieId}`);
+  };
   return (
     <Wrapper>
       {isLoading ? (
@@ -173,6 +180,8 @@ const Home = () => {
                       whileHover={"hover"}
                       transition={{ type: "tween" }}
                       bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                      layoutId={movie.id + ""}
+                      onClick={() => onBoxClicked(movie.id)}
                     >
                       <BoxInfo variants={boxInfoVariants}>
                         <h4>{movie.title}</h4>
@@ -182,6 +191,23 @@ const Home = () => {
               </Row>
             </AnimatePresence>
           </Slider>
+          <AnimatePresence>
+            {moviePathMatch ? (
+              <motion.div
+                layoutId={moviePathMatch.params.movieId}
+                style={{
+                  position: "absolute",
+                  width: "40vh",
+                  height: "80vh",
+                  backgroundColor: "red",
+                  top: 50,
+                  left: 0,
+                  right: 0,
+                  margin: "0 auto"
+                }}
+              ></motion.div>
+            ) : null}
+          </AnimatePresence>
         </>
       )}
     </Wrapper>
