@@ -186,6 +186,7 @@ const Slider = ({ title, data }: Props) => {
   const onBoxClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
   };
+
   return (
     <Wrapper>
       <Title>{title}</Title>
