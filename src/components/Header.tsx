@@ -5,8 +5,9 @@ import {
   useMotionValueEvent,
   useScroll
 } from "framer-motion";
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -96,7 +97,7 @@ const Dot = styled(motion.span)`
   background-color: ${(props) => props.theme.red};
 `;
 
-const Search = styled.span`
+const Search = styled.form`
   color: white;
   svg {
     height: 25px;
@@ -122,6 +123,10 @@ const SearchInput = styled(motion.input)`
   border: 1px solid ${(props) => props.theme.white.lighter};
   border-radius: 10px;
 `;
+
+interface SearchForm {
+  keyword: string;
+}
 
 const Header = () => {
   /*************************************************************************************************
@@ -177,6 +182,15 @@ const Header = () => {
       navAnimation.start("top");
     }
   });
+
+  /*************************************************************************************************
+   * 검색
+   *************************************************************************************************/
+  const navigator = useNavigate();
+  const { register, handleSubmit } = useForm<SearchForm>();
+  const search = (data: SearchForm) => {
+    navigator(`/search?keyword=${data.keyword}`);
+  };
   return (
     <Nav variants={navVariants} animate={navAnimation} initial={"top"}>
       <Col>
@@ -205,7 +219,7 @@ const Header = () => {
         </Menus>
       </Col>
       <Col>
-        <Search>
+        <Search onSubmit={handleSubmit(search)}>
           <motion.svg
             onClick={toggleSearch}
             animate={{ x: searchOpen ? -230 : 0 }}
@@ -225,6 +239,7 @@ const Header = () => {
             initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
             placeholder="Search for movie or tv show ..."
+            {...register("keyword", { required: true, minLength: 2 })}
           />
         </Search>
       </Col>
