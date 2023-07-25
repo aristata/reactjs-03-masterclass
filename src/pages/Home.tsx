@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useState } from "react";
 import { MoviesResult } from "../apis/types/Movie";
 import { useMatch, useNavigate } from "react-router-dom";
+import Slider from "../components/Slider";
 
 const Wrapper = styled.div`
   height: "500vh";
@@ -38,48 +39,6 @@ const Title = styled.h2`
 const Overview = styled.p`
   font-size: 30px;
   width: 50%;
-`;
-
-const Slider = styled.div`
-  top: -100px;
-  position: relative;
-`;
-
-const Row = styled(motion.div)`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  width: 100%;
-  gap: 20px;
-  position: absolute;
-`;
-
-const Box = styled(motion.div)<{ bg_photo: string }>`
-  background-color: whitesmoke;
-  background-image: url(${(props) => props.bg_photo});
-  background-size: cover;
-  background-position: center center;
-  height: 200px;
-  font-size: 64pt;
-  &:first-child {
-    transform-origin: center left;
-  }
-  &:last-child {
-    transform-origin: center right;
-  }
-  cursor: pointer;
-`;
-
-const BoxInfo = styled(motion.div)`
-  padding: 10px;
-  background-color: ${(props) => props.theme.black.lighter};
-  opacity: 0;
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  h4 {
-    text-align: center;
-    font-size: 18px;
-  }
 `;
 
 const Overlay = styled(motion.div)`
@@ -125,71 +84,15 @@ const ModalOverview = styled.p`
   color: ${(props) => props.theme.white.lighter};
 `;
 
-const rowVariants = {
-  hidden: {
-    x: window.outerWidth + 10
-  },
-  visible: {
-    x: 0
-  },
-  exit: {
-    x: -window.outerWidth - 10
-  }
-};
-
-const boxVariants = {
-  normal: {
-    scale: 1
-  },
-  hover: {
-    scale: 1.3,
-    y: -80,
-    transition: {
-      delay: 0.5,
-      duration: 0.1,
-      type: "tween"
-    }
-  }
-};
-
-const boxInfoVariants = {
-  hover: {
-    opacity: 1,
-    transition: {
-      delay: 0.5,
-      duaration: 0.1,
-      type: "tween"
-    }
-  }
-};
-
-const offset = 6;
-
 const Home = () => {
-  const navigate = useNavigate();
   const moviePathMatch = useMatch("/movies/:movieId");
   const { scrollY } = useScroll();
   const { data, isLoading } = useQuery<MoviesResult>(
     ["getMovies", "nowPlaying"],
     getMoviesNowPlaying
   );
+  const navigate = useNavigate();
 
-  const [index, setIndex] = useState(0);
-  const [leaving, setLeaving] = useState(false);
-  const incrementIndex = () => {
-    if (data) {
-      if (leaving) return;
-      toggleLeaving();
-      const totalMovies = data.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
-
-      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-    }
-  };
-  const toggleLeaving = () => setLeaving((prev) => !prev);
-  const onBoxClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
-  };
   const onOverlayClicked = () => {
     navigate("/");
   };
@@ -205,44 +108,13 @@ const Home = () => {
       ) : (
         <>
           <Banner
-            onClick={incrementIndex}
             bg_photo={makeImagePath(data?.results[0].backdrop_path || "")}
           >
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
-          <Slider>
-            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-              <Row
-                variants={rowVariants}
-                initial={"hidden"}
-                animate={"visible"}
-                exit={"exit"}
-                transition={{ type: "tween", duration: 1 }}
-                key={index}
-              >
-                {data?.results
-                  .slice(1)
-                  .slice(offset * index, offset * index + offset)
-                  .map((movie) => (
-                    <Box
-                      key={movie.id}
-                      variants={boxVariants}
-                      initial={"normal"}
-                      whileHover={"hover"}
-                      transition={{ type: "tween" }}
-                      bg_photo={makeImagePath(movie.backdrop_path, "w500")}
-                      layoutId={movie.id + ""}
-                      onClick={() => onBoxClicked(movie.id)}
-                    >
-                      <BoxInfo variants={boxInfoVariants}>
-                        <h4>{movie.title}</h4>
-                      </BoxInfo>
-                    </Box>
-                  ))}
-              </Row>
-            </AnimatePresence>
-          </Slider>
+          {data && <Slider title="현재 상영작" data={data} />}
+
           <AnimatePresence>
             {moviePathMatch ? (
               <>
