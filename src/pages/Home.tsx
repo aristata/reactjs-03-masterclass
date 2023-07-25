@@ -98,6 +98,31 @@ const MovieModal = styled(motion.div)`
   left: 0;
   right: 0;
   margin: 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.black.lighter};
+`;
+
+const ModalCoverImage = styled.div`
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  height: 400px;
+`;
+
+const ModalTitle = styled.h3`
+  color: ${(props) => props.theme.white.lighter};
+  padding: 20px;
+  font-size: 46px;
+  position: relative;
+  top: -80px;
+`;
+
+const ModalOverview = styled.p`
+  padding: 20px;
+  position: relative;
+  top: -80px;
+  color: ${(props) => props.theme.white.lighter};
 `;
 
 const rowVariants = {
@@ -168,6 +193,11 @@ const Home = () => {
   const onOverlayClicked = () => {
     navigate("/");
   };
+  const clickedMovie =
+    moviePathMatch?.params.movieId &&
+    data?.results.find(
+      (movie) => movie.id.toString() === moviePathMatch.params.movieId
+    );
   return (
     <Wrapper>
       {isLoading ? (
@@ -226,7 +256,22 @@ const Home = () => {
                   style={{
                     top: scrollY.get() + 100
                   }}
-                ></MovieModal>
+                >
+                  {clickedMovie && (
+                    <>
+                      <ModalCoverImage
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedMovie.backdrop_path,
+                            "w500"
+                          )})`
+                        }}
+                      />
+                      <ModalTitle>{clickedMovie.title}</ModalTitle>
+                      <ModalOverview>{clickedMovie.overview}</ModalOverview>
+                    </>
+                  )}
+                </MovieModal>
               </>
             ) : null}
           </AnimatePresence>
