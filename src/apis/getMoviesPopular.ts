@@ -2,7 +2,7 @@
 const TMDB_API_TOKEN = process.env.REACT_APP_TMDB_API_TOKEN;
 const TMDB_URI = process.env.REACT_APP_TMDB_URI;
 
-export default function getMoviesPopulars() {
+export default function getMoviesPopular() {
   return fetch(`${TMDB_URI}/movie/popular?language=ko-kr`, {
     method: "GET",
     headers: {

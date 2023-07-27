@@ -5,7 +5,9 @@ import { Movie, MoviesResult } from "../apis/types/Movie";
 import MovieModal from "../components/MovieModal";
 import Slider from "../components/Slider";
 import { makeImagePath } from "../utils/makeImagePath";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import getMoviesPopular from "../apis/getMoviesPopular";
+import { useScroll } from "framer-motion";
 
 const Wrapper = styled.div`
   height: "500vh";
@@ -40,17 +42,46 @@ const Overview = styled.p`
   width: 50%;
 `;
 
-const Home = () => {
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+const SliderArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 200px;
+`;
 
+export interface SelectedMovie extends Movie {
+  layoutId: string;
+}
+
+const Home = () => {
+  const [selectedMovie, setSelectedMovie] = useState<SelectedMovie | null>(
+    null
+  );
+
+  const clickMovieHandler = (movie: Movie, layoutId: string) => {
+    setSelectedMovie({ ...movie, layoutId });
+  };
+
+  const closeModal = () => {
+    setSelectedMovie(null);
+  };
+
+  // console.log("selectedMovie", selectedMovie);
+
+  /*************************************************************************************************
+   * 현재 상영작 데이터 조회
+   *************************************************************************************************/
   const { data: nowPlayingData, isLoading } = useQuery<MoviesResult>(
     ["getMovies", "nowPlaying"],
     getMoviesNowPlaying
   );
 
-  const clickMovieHandler = (movie: Movie) => {
-    setSelectedMovie(movie);
-  };
+  /*************************************************************************************************
+   * 인기작 데이터 조회
+   *************************************************************************************************/
+  const { data: popularData } = useQuery<MoviesResult>(
+    ["getMovies", "popular"],
+    getMoviesPopular
+  );
 
   return (
     <Wrapper>
@@ -66,14 +97,26 @@ const Home = () => {
             <Title>{nowPlayingData?.results[0].title}</Title>
             <Overview>{nowPlayingData?.results[0].overview}</Overview>
           </Banner>
-          {nowPlayingData && (
-            <Slider
-              title="현재 상영작"
-              data={nowPlayingData}
-              clickedMovie={clickMovieHandler}
-            />
+          <SliderArea>
+            {nowPlayingData && (
+              <Slider
+                title="현재 상영작"
+                data={nowPlayingData}
+                clickedMovie={clickMovieHandler}
+              />
+            )}
+            {popularData && (
+              <Slider
+                title="인기작"
+                data={popularData}
+                clickedMovie={clickMovieHandler}
+              />
+            )}
+          </SliderArea>
+
+          {selectedMovie && (
+            <MovieModal selectedMovie={selectedMovie} closeModal={closeModal} />
           )}
-          {selectedMovie && <MovieModal selectedMovie={selectedMovie} />}
         </>
       )}
     </Wrapper>

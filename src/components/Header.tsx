@@ -175,7 +175,7 @@ const Header = () => {
   const navAnimation = useAnimation();
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest) => {
-    console.log("scrollY: " + latest);
+    // console.log("scrollY: " + latest);
     if (latest > 80) {
       navAnimation.start("scroll");
     } else {

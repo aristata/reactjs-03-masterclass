@@ -3,6 +3,7 @@ import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Movie } from "../apis/types/Movie";
 import { makeImagePath } from "../utils/makeImagePath";
+import { SelectedMovie } from "../pages/Home";
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -14,7 +15,7 @@ const Overlay = styled(motion.div)`
 `;
 
 const MovieModal = styled(motion.div)`
-  position: absolute;
+  position: fixed;
   width: 40vw;
   height: 80vh;
   left: 0;
@@ -48,9 +49,10 @@ const ModalOverview = styled.p`
 `;
 
 interface Props {
-  selectedMovie: Movie;
+  selectedMovie: SelectedMovie;
+  closeModal: () => void;
 }
-const Modal = ({ selectedMovie }: Props) => {
+const Modal = ({ selectedMovie, closeModal }: Props) => {
   /*************************************************************************************************
    * useMatch
    *
@@ -85,6 +87,7 @@ const Modal = ({ selectedMovie }: Props) => {
    *************************************************************************************************/
   const onOverlayClicked = () => {
     navigate("/");
+    closeModal();
   };
 
   return (
@@ -98,7 +101,7 @@ const Modal = ({ selectedMovie }: Props) => {
               exit={{ opacity: 0 }}
             />
             <MovieModal
-              layoutId={moviePathMatch.params.movieId}
+              layoutId={selectedMovie.layoutId}
               style={{
                 top: scrollY.get() + 100
               }}

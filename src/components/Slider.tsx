@@ -119,7 +119,7 @@ const offset = 6;
 interface Props {
   title: string;
   data: MoviesResult;
-  clickedMovie: (movie: Movie) => void;
+  clickedMovie: (movie: Movie, layoutId: string) => void;
 }
 
 const Slider = ({ title, data, clickedMovie }: Props) => {
@@ -178,8 +178,8 @@ const Slider = ({ title, data, clickedMovie }: Props) => {
   };
 
   // 영화 박스 클릭 했을 때 ------------------------------------------------------------------------ 영화 박스 클릭 했을 때
-  const onBoxClicked = (movie: Movie) => {
-    clickedMovie(movie);
+  const onBoxClicked = (movie: Movie, layoutId: string) => {
+    clickedMovie(movie, layoutId);
     navigate(`/movies/${movie.id}`);
   };
 
@@ -222,8 +222,8 @@ const Slider = ({ title, data, clickedMovie }: Props) => {
                   whileHover={"hover"}
                   transition={{ type: "tween" }}
                   bg_photo={makeImagePath(movie.backdrop_path, "w500")}
-                  layoutId={movie.id + ""}
-                  onClick={() => onBoxClicked(movie)}
+                  layoutId={`${title}-${movie.id}`}
+                  onClick={() => onBoxClicked(movie, `${title}-${movie.id}`)}
                 >
                   <BoxInfo variants={boxInfoVariants}>
                     <h4>{movie.title}</h4>
