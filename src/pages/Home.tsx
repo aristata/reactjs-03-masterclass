@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import styled from "styled-components";
 import getMoviesNowPlaying from "../apis/getMoviesNowPlaying";
+import getMoviesPopular from "../apis/getMoviesPopular";
 import { Movie, MoviesResult } from "../apis/types/Movie";
 import MovieModal from "../components/MovieModal";
 import Slider from "../components/Slider";
 import { makeImagePath } from "../utils/makeImagePath";
-import { useEffect, useState } from "react";
-import getMoviesPopular from "../apis/getMoviesPopular";
-import { useScroll } from "framer-motion";
 
 const Wrapper = styled.div`
   height: "500vh";

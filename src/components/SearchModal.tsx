@@ -1,8 +1,8 @@
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { SelectedMovie } from "../pages/Home";
 import { makeImagePath } from "../utils/makeImagePath";
+import { SelectedSearch } from "../pages/Search";
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -48,17 +48,16 @@ const ModalOverview = styled.p`
 `;
 
 interface Props {
-  selectedMovie: SelectedMovie;
+  selectedSearch: SelectedSearch;
   closeModal: () => void;
 }
-const Modal = ({ selectedMovie, closeModal }: Props) => {
+const SearchModal = ({ selectedSearch, closeModal }: Props) => {
   /*************************************************************************************************
    * useMatch
    *
    * - 현재 경로가 아규먼트와 일치여부를 반환해 주는 react-router-dom 의 훅이다
-   * - 여기에서는 movie를 선택했는지 확인하기 위한 수단으로 사용되었다
    *************************************************************************************************/
-  const moviePathMatch = useMatch("/movies/:movieId");
+  const searchPathMatch = useMatch("/search/:id");
 
   /*************************************************************************************************
    * useScroll
@@ -92,7 +91,7 @@ const Modal = ({ selectedMovie, closeModal }: Props) => {
   return (
     <>
       <AnimatePresence>
-        {moviePathMatch ? (
+        {searchPathMatch ? (
           <>
             <Overlay
               onClick={onOverlayClicked}
@@ -100,7 +99,7 @@ const Modal = ({ selectedMovie, closeModal }: Props) => {
               exit={{ opacity: 0 }}
             />
             <MovieModal
-              layoutId={selectedMovie.layoutId}
+              layoutId={selectedSearch.layoutId}
               style={{
                 top: scrollY.get() + 100
               }}
@@ -108,13 +107,13 @@ const Modal = ({ selectedMovie, closeModal }: Props) => {
               <ModalCoverImage
                 style={{
                   backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                    selectedMovie.backdrop_path,
+                    selectedSearch.backdrop_path,
                     "w500"
                   )})`
                 }}
               />
-              <ModalTitle>{selectedMovie.title}</ModalTitle>
-              <ModalOverview>{selectedMovie.overview}</ModalOverview>
+              <ModalTitle>{selectedSearch.title}</ModalTitle>
+              <ModalOverview>{selectedSearch.overview}</ModalOverview>
             </MovieModal>
           </>
         ) : null}
@@ -123,4 +122,4 @@ const Modal = ({ selectedMovie, closeModal }: Props) => {
   );
 };
 
-export default Modal;
+export default SearchModal;
