@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
-import styled from "styled-components";
-import { makeImagePath } from "../utils/makeImagePath";
-import { MoviesResult } from "../apis/types/Movie";
 import { useState } from "react";
+import styled from "styled-components";
+import { Movie, MoviesResult } from "../apis/types/Movie";
+import { makeImagePath } from "../utils/makeImagePath";
 import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -119,9 +119,10 @@ const offset = 6;
 interface Props {
   title: string;
   data: MoviesResult;
+  clickedMovie: (movie: Movie) => void;
 }
 
-const Slider = ({ title, data }: Props) => {
+const Slider = ({ title, data, clickedMovie }: Props) => {
   const [sliderIndex, setSliderIndex] = useState(0);
   const [sliderMoving, setSliderMoving] = useState(false);
   const navigate = useNavigate();
@@ -133,11 +134,9 @@ const Slider = ({ title, data }: Props) => {
   const incrementIndex = () => {
     // 데이터가 없으면 리턴
     if (!data) return;
-    console.log("data", data);
 
     // 슬라이더가 이동 중이면 리턴
     if (sliderMoving) return;
-    console.log("sliderMoving", sliderMoving);
 
     // 슬라이더 이동 중 false 로 변경
     toggleSliderMoving();
@@ -151,8 +150,6 @@ const Slider = ({ title, data }: Props) => {
 
     // 현재 슬라이더 인덱스 세팅하기
     setSliderIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-
-    console.log("incrementIndex", sliderIndex);
   };
 
   // 슬라이더 왼쪽으로 이동 ------------------------------------------------------------------------ 슬라이더 왼쪽으로 이동
@@ -178,13 +175,12 @@ const Slider = ({ title, data }: Props) => {
 
     // 현재 슬라이더 인덱스 세팅하기
     setSliderIndex((prev) => (prev === minIndex ? maxIndex : prev - 1));
-
-    console.log("decreamentIndex", sliderIndex);
   };
 
   // 영화 박스 클릭 했을 때 ------------------------------------------------------------------------ 영화 박스 클릭 했을 때
-  const onBoxClicked = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
+  const onBoxClicked = (movie: Movie) => {
+    clickedMovie(movie);
+    navigate(`/movies/${movie.id}`);
   };
 
   return (
@@ -227,7 +223,7 @@ const Slider = ({ title, data }: Props) => {
                   transition={{ type: "tween" }}
                   bg_photo={makeImagePath(movie.backdrop_path, "w500")}
                   layoutId={movie.id + ""}
-                  onClick={() => onBoxClicked(movie.id)}
+                  onClick={() => onBoxClicked(movie)}
                 >
                   <BoxInfo variants={boxInfoVariants}>
                     <h4>{movie.title}</h4>

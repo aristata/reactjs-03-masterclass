@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import getMoviesNowPlaying from "../apis/getMoviesNowPlaying";
-import { MoviesResult } from "../apis/types/Movie";
+import { Movie, MoviesResult } from "../apis/types/Movie";
 import MovieModal from "../components/MovieModal";
 import Slider from "../components/Slider";
 import { makeImagePath } from "../utils/makeImagePath";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   height: "500vh";
@@ -40,10 +41,16 @@ const Overview = styled.p`
 `;
 
 const Home = () => {
-  const { data, isLoading } = useQuery<MoviesResult>(
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
+  const { data: nowPlayingData, isLoading } = useQuery<MoviesResult>(
     ["getMovies", "nowPlaying"],
     getMoviesNowPlaying
   );
+
+  const clickMovieHandler = (movie: Movie) => {
+    setSelectedMovie(movie);
+  };
 
   return (
     <Wrapper>
@@ -52,13 +59,21 @@ const Home = () => {
       ) : (
         <>
           <Banner
-            bg_photo={makeImagePath(data?.results[0].backdrop_path || "")}
+            bg_photo={makeImagePath(
+              nowPlayingData?.results[0].backdrop_path || ""
+            )}
           >
-            <Title>{data?.results[0].title}</Title>
-            <Overview>{data?.results[0].overview}</Overview>
+            <Title>{nowPlayingData?.results[0].title}</Title>
+            <Overview>{nowPlayingData?.results[0].overview}</Overview>
           </Banner>
-          {data && <Slider title="현재 상영작" data={data} />}
-          {data && <MovieModal data={data} />}
+          {nowPlayingData && (
+            <Slider
+              title="현재 상영작"
+              data={nowPlayingData}
+              clickedMovie={clickMovieHandler}
+            />
+          )}
+          {selectedMovie && <MovieModal selectedMovie={selectedMovie} />}
         </>
       )}
     </Wrapper>

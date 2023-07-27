@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { MoviesResult } from "../apis/types/Movie";
+import { Movie } from "../apis/types/Movie";
 import { makeImagePath } from "../utils/makeImagePath";
 
 const Overlay = styled(motion.div)`
@@ -48,9 +48,9 @@ const ModalOverview = styled.p`
 `;
 
 interface Props {
-  data: MoviesResult;
+  selectedMovie: Movie;
 }
-const Modal = ({ data }: Props) => {
+const Modal = ({ selectedMovie }: Props) => {
   /*************************************************************************************************
    * useMatch
    *
@@ -87,14 +87,6 @@ const Modal = ({ data }: Props) => {
     navigate("/");
   };
 
-  /*************************************************************************************************
-   * 영화 클릭 여부 체크
-   *************************************************************************************************/
-  const clickedMovie =
-    moviePathMatch?.params.movieId &&
-    data?.results.find(
-      (movie) => movie.id.toString() === moviePathMatch.params.movieId
-    );
   return (
     <>
       <AnimatePresence>
@@ -111,20 +103,16 @@ const Modal = ({ data }: Props) => {
                 top: scrollY.get() + 100
               }}
             >
-              {clickedMovie && (
-                <>
-                  <ModalCoverImage
-                    style={{
-                      backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                        clickedMovie.backdrop_path,
-                        "w500"
-                      )})`
-                    }}
-                  />
-                  <ModalTitle>{clickedMovie.title}</ModalTitle>
-                  <ModalOverview>{clickedMovie.overview}</ModalOverview>
-                </>
-              )}
+              <ModalCoverImage
+                style={{
+                  backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                    selectedMovie.backdrop_path,
+                    "w500"
+                  )})`
+                }}
+              />
+              <ModalTitle>{selectedMovie.title}</ModalTitle>
+              <ModalOverview>{selectedMovie.overview}</ModalOverview>
             </MovieModal>
           </>
         ) : null}
